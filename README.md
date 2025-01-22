@@ -17,7 +17,7 @@ A personal finance tracker that helps users manage their income, expenses, and f
 
 
 ## Project Details
-###Core Tech Stack:
+### Core Tech Stack:
 - Architecture: MVVM (Model-View-ViewModel) with Clean Architecture.
 - Programming Language: Kotlin
 - UI Framework: Jetpack Compose
