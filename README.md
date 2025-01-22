@@ -17,7 +17,7 @@ A personal finance tracker that helps users manage their income, expenses, and f
 
 
 ## Project Details
-*Core Tech Stack:*
+###Core Tech Stack:
 - Architecture: MVVM (Model-View-ViewModel) with Clean Architecture.
 - Programming Language: Kotlin
 - UI Framework: Jetpack Compose
@@ -28,11 +28,11 @@ A personal finance tracker that helps users manage their income, expenses, and f
 - Security: Encrypted SharedPreferences/SQLCipher for sensitive data.
 - Firebase: Authentication, Firestore (optional for cloud sync), and Cloud Messaging (for reminders).
 - Charts: MPAndroidChart library for analytics.
-  *Testing:*
+### Testing:
 - Unit Tests: JUnit for business logic.
 - UI Tests: Espresso and Jetpack Compose Test.
 - Code Coverage Tools: JaCoCo or Kover.
-  *Development Tools:*
+### Development Tools:
 - Version Control: Git (use GitHub/GitLab/Bitbucket for portfolio visibility).
 
 [//]: # (- CI/CD: GitHub Actions, CircleCI, or Bitrise for automated builds and testing. )
