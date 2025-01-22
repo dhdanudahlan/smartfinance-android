@@ -3,18 +3,23 @@
 A personal finance tracker that helps users manage their income, expenses, and financial goals.
 
 ## Core Features.
-- Budgeting Tools: Create, track, and edit budgets with visual progress indicators.
-- Expense Tracking: Categorize expenses with customizable tags and attach notes or receipts.
-- Category Management: Categorize transactions (e.g., food, travel, bills).
-- Data Visualization: Use charts and graphs to show spending trends (e.g., Pie Charts for categories, Line Charts for monthly trends).
-- Reports: Generate downloadable reports (PDF/Excel) for specific time periods.
-- Goal Setting: Allow users to set financial goals with progress tracking.
-- Notifications: Reminders for bill payments or spending limits.
-- Data Security: Use biometric authentication and encrypted data storage.
-- Multi-Currency Support: Allow users to manage finances in different currencies.
-- Offline Support: Enable the app to work seamlessly without an internet connection.
-- Cloud Backup: Sync data using Firebase.
-
+### Budgeting
+- Budget Creation: Users can create budgets for specific categories (e.g., Food, Transportation) with a monthly or weekly duration.
+- Progress Tracking: Visualize budget utilization with progress bars or pie charts.
+- Notifications: Notify users when spending approaches or exceeds the set budget.
+### Expense Tracking
+- Expense Entry: Users can log expenses with details like amount, category, date, and optional notes.
+- Categorization: Assign expenses to predefined or custom categories.
+- Attachments: Allow users to attach receipts or images.
+- Visual Insights: Provide charts and graphs showing expense trends over time.
+### Financial Goal Setting
+- Goal Creation: Users can set financial goals (e.g., saving $2000 for a vacation) with deadlines.
+- Progress Tracking: Visualize savings progress with interactive charts.
+- Automation: Suggest savings plans based on the goal and user’s financial habits.
+### Other Features
+- Generate detailed reports (PDF/Excel) for specified periods.
+- Include expense breakdowns and budgeting summaries.
+- Use biometric authentication and encrypted data storage
 
 ## Project Details
 ### Core Tech Stack:
