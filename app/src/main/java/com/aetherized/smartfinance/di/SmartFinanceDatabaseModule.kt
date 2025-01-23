@@ -24,7 +24,7 @@ object SmartFinanceDatabaseModule {
             context,
             SmartFinanceDatabase::class.java,
             "smartfinance_database"
-        ).addMigrations(MIGRATION_1_2).build()
+        ).build()
     }
 
     @Provides
@@ -35,10 +35,5 @@ object SmartFinanceDatabaseModule {
     @Provides
     fun provideTransactionDao(database: SmartFinanceDatabase): TransactionDao {
         return database.transactionDao()
-    }
-}
-val MIGRATION_1_2 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        TODO("Not yet implemented")
     }
 }
