@@ -18,7 +18,7 @@ interface CategoryDao {
     @Update
     suspend fun updateCategory(category: CategoryEntity)
 
-    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC")
+    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")
     fun getAllCategories(limit: Int = 50, offset: Int = 0): Flow<List<CategoryEntity>>
 
     @Transaction

@@ -20,8 +20,8 @@ import com.aetherized.smartfinance.utils.Converters
     ],
     indices = [
         Index(value = ["categoryId"]),
-        Index(value = ["lastModified"]),
-        Index(value = ["isDeleted"])
+        Index(value = ["last_modified"]),
+        Index(value = ["is_deleted"])
     ]
 )
 data class TransactionEntity(
