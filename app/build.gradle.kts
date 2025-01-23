@@ -1,6 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
+    id("kotlin-parcelize")
+    id("kotlin-kapt")
+
 }
 
 android {
@@ -10,7 +15,7 @@ android {
     defaultConfig {
         applicationId = "com.aetherized.smartfinance"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -66,4 +71,27 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Dagger - Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    // Dagger - Hilt Instrumentation Test
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+
+    // Dagger - Hilt Local Unit Test
+    testImplementation(libs.hilt.android.testing)
+    kspTest(libs.hilt.compiler)
+
+
+    // Room
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+
+    // Room Encryption (SQLCipher)
+    implementation(libs.android.database.sqlcipher)
+
+//    implementation(libs.androidx.sqlite.ktx)
 }

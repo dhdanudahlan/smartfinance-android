@@ -38,7 +38,7 @@ A personal finance tracker that helps users manage their income, expenses, and f
 - UI Tests: Espresso and Jetpack Compose Test.
 - Code Coverage Tools: JaCoCo or Kover.
 ### Development Tools:
-- Version Control: Git (use GitHub/GitLab/Bitbucket for portfolio visibility).
+- Version Control: Git (use GitHub for portfolio visibility).
 
 [//]: # (- CI/CD: GitHub Actions, CircleCI, or Bitrise for automated builds and testing. )
 
