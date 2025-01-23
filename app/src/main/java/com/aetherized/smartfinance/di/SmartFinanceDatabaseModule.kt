@@ -28,11 +28,6 @@ object SmartFinanceDatabaseModule {
     }
 
     @Provides
-    fun provideUserDao(database: SmartFinanceDatabase): UserDao {
-        return database.userDao()
-    }
-
-    @Provides
     fun provideCategoryDao(database: SmartFinanceDatabase): CategoryDao {
         return database.categoryDao()
     }
