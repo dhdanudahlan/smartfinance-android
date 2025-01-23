@@ -5,29 +5,23 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.aetherized.smartfinance.data.local.entity.CategoryEntity
-import com.aetherized.smartfinance.data.local.relationship.UserWithTransactions
+import com.aetherized.smartfinance.data.local.relationship.CategoryWithTransactions
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CategoryDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(category: CategoryEntity): Long
 
-    @Query("SELECT * FROM categories")
-    suspend fun getAllCategories(): List<CategoryEntity>
+    @Update
+    suspend fun updateCategory(category: CategoryEntity)
 
-    @Query("SELECT * FROM categories WHERE id = :categoryId")
-    suspend fun getCategoryById(categoryId: Int): CategoryEntity?
-
-    @Query("SELECT * FROM categories WHERE type = :type")
-    suspend fun getCategoriesByType(type: String): List<CategoryEntity>
-
-    @Query("DELETE FROM categories WHERE id = :categoryId")
-    suspend fun deleteCategoryById(categoryId: Int): Int
-
+    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC")
+    fun getAllCategories(limit: Int = 50, offset: Int = 0): Flow<List<CategoryEntity>>
 
     @Transaction
     @Query("SELECT * FROM categories WHERE id = :categoryId")
-    suspend fun getCategoryWithTransactions(categoryId: Int): Flow<UserWithTransactions>
+    fun getCategoryWithTransactions(categoryId: Long): Flow<CategoryWithTransactions>
 }

@@ -4,11 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.aetherized.smartfinance.data.local.entity.CategoryEntity
 import com.aetherized.smartfinance.data.local.entity.TransactionEntity
-import com.aetherized.smartfinance.data.local.entity.UserEntity
 
 
 data class CategoryWithTransactions(
-    @Embedded val user: CategoryEntity,
+    @Embedded val category: CategoryEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "categoryId"

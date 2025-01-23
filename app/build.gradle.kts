@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
     id("kotlin-parcelize")
@@ -10,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.aetherized.smartfinance"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.aetherized.smartfinance"
@@ -54,16 +55,22 @@ android {
     }
 }
 
-dependencies {
 
+dependencies {
+    // Core and Lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
+
+    // Jetpack Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.paging.common.android)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -76,15 +83,6 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // Dagger - Hilt Instrumentation Test
-    androidTestImplementation(libs.hilt.android.testing)
-    kspAndroidTest(libs.hilt.compiler)
-
-    // Dagger - Hilt Local Unit Test
-    testImplementation(libs.hilt.android.testing)
-    kspTest(libs.hilt.compiler)
-
-
     // Room
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
@@ -92,6 +90,4 @@ dependencies {
 
     // Room Encryption (SQLCipher)
     implementation(libs.android.database.sqlcipher)
-
-//    implementation(libs.androidx.sqlite.ktx)
 }

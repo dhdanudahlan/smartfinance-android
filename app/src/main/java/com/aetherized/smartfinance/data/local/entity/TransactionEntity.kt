@@ -12,33 +12,31 @@ import com.aetherized.smartfinance.utils.Converters
     tableName = "transactions",
     foreignKeys = [
         ForeignKey(
-            entity = UserEntity::class,
-            parentColumns = ["id"],
-            childColumns = ["userId"],
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
             entity = CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["categoryId"],
-            onDelete = ForeignKey.SET_NULL
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [
-        Index(value = ["userId"], unique = false),
-        Index(value = ["categoryId"], unique = false),
-        Index(value = ["date"], unique = false)
+        Index(value = ["categoryId"]),
+        Index(value = ["lastModified"]),
+        Index(value = ["isDeleted"])
     ]
 )
-@TypeConverters(Converters::class)
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    @ColumnInfo(name = "user_id")
-    val userId: Int,
-    @ColumnInfo(name = "category_id")
-    val categoryId: Int,
+    val id: Long = 0L,
+    val categoryId: Long,
     val amount: Double,
-    val date: String,
-    val note: String? = null
-)
+    val note: String? = null,
+    val timestamp: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "is_deleted")
+    val isDeleted: Boolean = false,
+    @ColumnInfo(name = "last_modified")
+    val lastModified: Long = System.currentTimeMillis(),
+) {
+    init {
+        require(amount > 0) { "Transaction amount must be greater than zero." }
+    }
+}

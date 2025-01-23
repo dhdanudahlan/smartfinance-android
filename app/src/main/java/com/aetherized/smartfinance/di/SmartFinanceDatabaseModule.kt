@@ -6,7 +6,6 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.aetherized.smartfinance.data.local.dao.CategoryDao
 import com.aetherized.smartfinance.data.local.dao.TransactionDao
-import com.aetherized.smartfinance.data.local.dao.UserDao
 import com.aetherized.smartfinance.data.local.database.SmartFinanceDatabase
 import dagger.Module
 import dagger.Provides

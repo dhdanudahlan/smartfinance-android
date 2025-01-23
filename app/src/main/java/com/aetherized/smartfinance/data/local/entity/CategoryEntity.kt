@@ -10,17 +10,24 @@ import com.aetherized.smartfinance.utils.CategoryType
 
 @Entity (
     tableName = "categories",
-    indices = [Index(value = ["name"], unique = true)],
-    foreignKeys = [ForeignKey(
-        entity = UserEntity::class,
-        parentColumns = ["id"],
-        childColumns = ["user_id"],
-        onDelete = ForeignKey.CASCADE
-    )]
+    indices = [
+        Index(value = ["lastModified"]),
+        Index(value = ["isDeleted"])
+    ]
 )
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0L,
     val name: String,
-    val type: CategoryType,
-)
+    val type: CategoryType, // EXPENSE or INCOME
+    val color: String? = null,
+    val icon: String? = null,
+    @ColumnInfo(name = "is_deleted")
+    val isDeleted: Boolean = false,
+    @ColumnInfo(name = "last_modified")
+    val lastModified: Long = System.currentTimeMillis(),
+) {
+    init {
+        require(name.isNotBlank()) { "Category name cannot be empty." }
+    }
+}
