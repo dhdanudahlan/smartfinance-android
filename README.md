@@ -1,8 +1,9 @@
 # SmartFinance
 
-A personal finance tracker that helps users manage their income, expenses, and financial goals.
+## Overview
+SmartFinance is a personal finance manager app designed to help users manage their income, expenses, and financial goals effectively. With a user-friendly interface and robust features, the app empowers users to take control of their finances.
 
-## Core Features.
+## Features.
 ### Budgeting
 - Budget Creation: Users can create budgets for specific categories (e.g., Food, Transportation) with a monthly or weekly duration.
 - Progress Tracking: Visualize budget utilization with progress bars or pie charts.
@@ -22,30 +23,51 @@ A personal finance tracker that helps users manage their income, expenses, and f
 - Use biometric authentication and encrypted data storage
 
 ## Project Details
+### Architecture
+- Clean Architecture: Follows Clean Architecture principles with distinct layers:
+  - Presentation Layer
+  - Domain Layer
+  - Data Layer
+- MVVM Pattern
 ### Core Tech Stack:
-- Architecture: MVVM (Model-View-ViewModel) with Clean Architecture.
 - Programming Language: Kotlin
 - UI Framework: Jetpack Compose
-- Database: Room.
-- Dependency Injection: Hilt
-- Networking: Retrofit with Kotlin Coroutines for API calls.
-- State Management: State Hoisting, ViewModel’s StateFlow.
-- Security: Encrypted SharedPreferences/SQLCipher for sensitive data.
-- Firebase: Authentication, Firestore (optional for cloud sync), and Cloud Messaging (for reminders).
-- Charts: MPAndroidChart library for analytics.
+- Database: Room with migrations and DAO patterns
+- Dependency Injection: Dagger-Hilt for scalable and testable dependency management
+- Networking: Retrofit with Kotlin Coroutines for efficient API handling
+- State Management: State Hoisting and ViewModel's StateFlow for UI state management
+- Security: Encrypted SharedPreferences or SQLCipher for secure data storage
+- Firebase Integration:
+  - Firebase Authentication for user login
+  - Firestore for cloud sync
+  - Cloud Messaging for reminders and notifications
+- Charts and Analytics: MPAndroidChart for financial visualizations
 ### Testing:
-- Unit Tests: JUnit for business logic.
-- UI Tests: Espresso and Jetpack Compose Test.
-- Code Coverage Tools: JaCoCo or Kover.
+- Unit Testing: JUnit for validating business logic.
+- UI Testing: Espresso and Jetpack Compose Test for UI interactions.
+- Code Quality Checks: Integrated with tools like Ktlint and Detekt.
 ### Development Tools:
-- Version Control: Git (use GitHub for portfolio visibility).
+- Version Control: GitHub with clear branching strategies.
+- CI/CD: GitHub Actions for automated builds, testing, and deployment pipelines.
 
-[//]: # (- CI/CD: GitHub Actions, CircleCI, or Bitrise for automated builds and testing. )
+[//]: # (- Performance Optimization:)
 
-[//]: # (- Performance Tools: Android Profiler, LeakCanary for memory leaks. )
+[//]: # (  - Android Profiler for debugging and performance analysis. )
+
+[//]: # (  - LeakCanary for detecting memory leaks.)
 
 [//]: # (- Analytics: Firebase Analytics or Mixpanel for user behavior tracking.)
 
+
+## Instalation
+1. Clone the repository:
+`git clone https://github.com/your-repo-url.git`
+2. Open the project in Android Studio.
+3. Sync Gradle files and install dependencies.
+4. Build and run the app on an emulator or physical device.
+
+# Usage
+...
 
 ## Credits
 SmartFinance is a personal project developed by myself (dimas/dimashdanud/dhdanudahlan/aetherized)
