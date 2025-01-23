@@ -11,8 +11,8 @@ import com.aetherized.smartfinance.utils.CategoryType
 @Entity (
     tableName = "categories",
     indices = [
-        Index(value = ["lastModified"]),
-        Index(value = ["isDeleted"])
+        Index(value = ["last_modified"]),
+        Index(value = ["is_deleted"])
     ]
 )
 data class CategoryEntity(

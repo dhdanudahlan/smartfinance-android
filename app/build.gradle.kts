@@ -54,7 +54,9 @@ android {
         }
     }
 }
-
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
 
 dependencies {
     // Core and Lifecycle
@@ -81,7 +83,7 @@ dependencies {
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.compiler)
 
     // Room
     implementation(libs.androidx.room.ktx)
