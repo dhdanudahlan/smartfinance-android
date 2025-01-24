@@ -20,14 +20,15 @@ data class CategoryEntity(
     val id: Long = 0L,
     val name: String,
     val type: CategoryType, // EXPENSE or INCOME
-    val color: String? = null,
-    val icon: String? = null,
+    val color: String? = null, // HEX Color Code
+    val icon: String? = null, // URI or Resource Name
     @ColumnInfo(name = "is_deleted")
     val isDeleted: Boolean = false,
     @ColumnInfo(name = "last_modified")
-    val lastModified: Long = System.currentTimeMillis(),
+    val lastModified: Long = currentTimestamp,
 ) {
-    init {
-        require(name.isNotBlank()) { "Category name cannot be empty." }
+    companion object {
+        val currentTimestamp: Long
+            get() = System.currentTimeMillis()
     }
 }

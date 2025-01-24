@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+//    id("com.google.gms.google-services")
     id("kotlin-parcelize")
     id("kotlin-kapt")
 
@@ -102,4 +103,12 @@ dependencies {
 
     // Room Encryption (SQLCipher)
     implementation(libs.android.database.sqlcipher)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+
+    // MPAndroidChart
+//    implementation(libs.mpandroidchart)
 }

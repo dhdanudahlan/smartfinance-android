@@ -14,7 +14,7 @@ import androidx.room.TypeConverters
             entity = CategoryEntity::class,
             parentColumns = ["id"],
             childColumns = ["categoryId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.SET_DEFAULT
         )
     ],
     indices = [
@@ -26,16 +26,18 @@ import androidx.room.TypeConverters
 data class TransactionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val categoryId: Long,
+    @ColumnInfo(defaultValue = "0") // Default value for categoryId
+    val categoryId: Long, // FK to CategoryEntity
     val amount: Double,
     val note: String? = null,
-    val timestamp: Long = System.currentTimeMillis(),
+    val timestamp: Long = currentTimestamp,
     @ColumnInfo(name = "is_deleted")
     val isDeleted: Boolean = false,
     @ColumnInfo(name = "last_modified")
-    val lastModified: Long = System.currentTimeMillis(),
+    val lastModified: Long = currentTimestamp,
 ) {
-    init {
-        require(amount > 0) { "Transaction amount must be greater than zero." }
+    companion object {
+        val currentTimestamp: Long
+            get() = System.currentTimeMillis()
     }
 }

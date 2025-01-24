@@ -18,10 +18,13 @@ interface CategoryDao {
     @Update
     suspend fun updateCategory(category: CategoryEntity)
 
-    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")
-    fun getAllCategories(limit: Int = 50, offset: Int = 0): Flow<List<CategoryEntity>>
+    @Query("DELETE FROM categories WHERE id = :id")
+    suspend fun deleteCategoryById(id: Long)
 
-    @Transaction
-    @Query("SELECT * FROM categories WHERE id = :categoryId")
-    fun getCategoryWithTransactions(categoryId: Long): Flow<CategoryWithTransactions>
+    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")
+    fun getAllActiveCategories(limit: Int = 50, offset: Int = 0): Flow<List<CategoryEntity>>
+
+    @Query("SELECT * FROM categories WHERE id = :id")
+    suspend fun getCategoryById(id: Long): CategoryEntity?
 }
+

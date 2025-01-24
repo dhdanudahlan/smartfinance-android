@@ -12,12 +12,22 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long
 
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity)
 
-    @Query("SELECT * FROM transactions WHERE is_deleted = 0 AND categoryId = :categoryId ORDER BY timestamp DESC")
+    @Query("DELETE FROM transactions WHERE id = :id")
+    suspend fun deleteTransactionById(id: Long)
+
+    @Query("SELECT * FROM transactions WHERE is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")
+    fun getAllActiveTransactions(limit: Int = 50, offset: Int = 0): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions WHERE id = :id")
+    suspend fun getTransactionById(id: Long): TransactionEntity?
+
+    @Query("SELECT * FROM transactions WHERE categoryId = :categoryId AND is_deleted = 0 ORDER BY timestamp DESC")
     fun getTransactionsByCategory(categoryId: Long): Flow<List<TransactionEntity>>
+
 }

@@ -10,10 +10,15 @@ import javax.inject.Singleton
 @Singleton
 class CategoryRepository @Inject constructor(private val categoryDao: CategoryDao) {
     fun getAllCategories(limit:Int = 50, offset: Int = 0): Flow<List<CategoryEntity>> =
-        categoryDao.getAllCategories(limit, offset)
+        categoryDao.getAllActiveCategories(limit, offset)
 
-    fun getCategoryWithTransactions(categoryId: Long): Flow<CategoryWithTransactions> =
-        categoryDao.getCategoryWithTransactions(categoryId)
+    suspend fun getCategoryById(id: Long): Result<CategoryEntity?> {
+        return try {
+            Result.success(categoryDao.getCategoryById(id))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 
     suspend fun addCategory(category: CategoryEntity): Result<Long> {
         return if (category.name.isNotBlank()) {
@@ -21,6 +26,24 @@ class CategoryRepository @Inject constructor(private val categoryDao: CategoryDa
             Result.success(id)
         } else {
             Result.failure(IllegalArgumentException("Category name cannot be empty."))
+        }
+    }
+
+    suspend fun updateCategory(category: CategoryEntity): Result<Unit> {
+        return try {
+            categoryDao.updateCategory(category)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteCategory(id: Long): Result<Unit> {
+        return try {
+            categoryDao.deleteCategoryById(id)
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }
