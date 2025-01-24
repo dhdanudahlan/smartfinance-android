@@ -71,14 +71,19 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.paging.common.android)
+    implementation(libs.androidx.junit.ktx)
 
     // Testing
+    testImplementation(libs.androidx.core)
+        // Unit Tests
     testImplementation(libs.junit)
     testImplementation(libs.androidx.core.testing)
-    testImplementation(libs.androidx.junit.v115)
-    testImplementation(libs.androidx.core)
     testImplementation(libs.kotlinx.coroutines.test)
+        // Instrumented Tests
+    androidTestImplementation(libs.androidx.runner)
+    androidTestImplementation(libs.androidx.room.testing)
     androidTestImplementation(libs.androidx.junit)
+
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
