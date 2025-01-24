@@ -1,8 +1,8 @@
 # SmartFinance Project Details
 
 ## **Overview**
-SmartFinance is a personal finance manager app designed to help users manage their income, expenses, and financial goals effectively. With a user-friendly interface and robust features, the app empowers users to take control of their finances.
-
+SmartFinance is a modern personal finance management app designed to empower individuals to take control of their finances effortlessly. Built with a focus on simplicity, security, and insights, the app supports both English and Bahasa languages, with a tailored focus on the Indonesian market using IDR currency. 
+SmartFinance showcases cutting-edge Android development practices, serving as a portfolio project to demonstrate my expertise in building robust, user-centric mobile applications.
 ---
 
 ## **Features**
