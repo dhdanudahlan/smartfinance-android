@@ -1,8 +1,8 @@
-package com.aetherized.smartfinance.data.repository
+package com.aetherized.smartfinance.features.transactions.domain.repository
 
-import com.aetherized.smartfinance.data.local.dao.TransactionDao
-import com.aetherized.smartfinance.data.local.entity.CategoryEntity
-import com.aetherized.smartfinance.data.local.entity.TransactionEntity
+import com.aetherized.smartfinance.core.database.dao.TransactionDao
+import com.aetherized.smartfinance.core.database.entity.CategoryEntity
+import com.aetherized.smartfinance.core.database.entity.TransactionEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow

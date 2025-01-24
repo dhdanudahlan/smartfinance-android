@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.data.local.entity
+package com.aetherized.smartfinance.core.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

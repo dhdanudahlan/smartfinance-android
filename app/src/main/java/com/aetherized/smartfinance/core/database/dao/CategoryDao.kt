@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.data.local.dao
+package com.aetherized.smartfinance.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.aetherized.smartfinance.data.local.entity.CategoryEntity
-import com.aetherized.smartfinance.data.local.relationship.CategoryWithTransactions
+import com.aetherized.smartfinance.core.database.entity.CategoryEntity
+import com.aetherized.smartfinance.core.database.relationship.CategoryWithTransactions
 import kotlinx.coroutines.flow.Flow
 
 @Dao

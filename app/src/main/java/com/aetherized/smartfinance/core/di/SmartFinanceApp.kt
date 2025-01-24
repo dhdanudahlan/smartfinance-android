@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.app
+package com.aetherized.smartfinance.core.di
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

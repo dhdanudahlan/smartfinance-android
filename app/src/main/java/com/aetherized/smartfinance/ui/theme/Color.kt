@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.presentation.ui.theme
+package com.aetherized.smartfinance.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

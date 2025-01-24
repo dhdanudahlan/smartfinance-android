@@ -1,9 +1,9 @@
-package com.aetherized.smartfinance.data.local.relationship
+package com.aetherized.smartfinance.core.database.relationship
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.aetherized.smartfinance.data.local.entity.CategoryEntity
-import com.aetherized.smartfinance.data.local.entity.TransactionEntity
+import com.aetherized.smartfinance.core.database.entity.CategoryEntity
+import com.aetherized.smartfinance.core.database.entity.TransactionEntity
 
 
 data class CategoryWithTransactions(

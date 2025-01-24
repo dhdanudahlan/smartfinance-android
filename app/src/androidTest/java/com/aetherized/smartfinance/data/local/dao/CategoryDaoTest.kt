@@ -1,7 +1,8 @@
 package com.aetherized.smartfinance.data.local.dao
 
-import com.aetherized.smartfinance.data.local.entity.CategoryEntity
-import com.aetherized.smartfinance.utils.CategoryType
+import com.aetherized.smartfinance.core.database.dao.CategoryDao
+import com.aetherized.smartfinance.core.database.entity.CategoryEntity
+import com.aetherized.smartfinance.core.utils.CategoryType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import org.junit.Assert.assertEquals

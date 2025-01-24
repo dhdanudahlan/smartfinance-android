@@ -1,12 +1,10 @@
-package com.aetherized.smartfinance.di
+package com.aetherized.smartfinance.core.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.aetherized.smartfinance.data.local.dao.CategoryDao
-import com.aetherized.smartfinance.data.local.dao.TransactionDao
-import com.aetherized.smartfinance.data.local.database.SmartFinanceDatabase
+import com.aetherized.smartfinance.core.database.dao.CategoryDao
+import com.aetherized.smartfinance.core.database.dao.TransactionDao
+import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

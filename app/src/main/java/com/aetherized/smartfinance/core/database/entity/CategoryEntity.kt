@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.data.local.entity
+package com.aetherized.smartfinance.core.database.entity
 
 
 import androidx.room.ColumnInfo
@@ -6,7 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.aetherized.smartfinance.utils.CategoryType
+import com.aetherized.smartfinance.core.utils.CategoryType
 
 @Entity (
     tableName = "categories",

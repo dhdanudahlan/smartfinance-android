@@ -3,9 +3,7 @@ package com.aetherized.smartfinance.data.local.dao
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.aetherized.smartfinance.data.local.database.SmartFinanceDatabase
-import com.aetherized.smartfinance.data.local.entity.CategoryEntity
-import com.aetherized.smartfinance.utils.CategoryType
+import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope

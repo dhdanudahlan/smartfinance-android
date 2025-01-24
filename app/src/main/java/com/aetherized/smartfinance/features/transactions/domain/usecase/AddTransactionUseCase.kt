@@ -1,7 +1,7 @@
-package com.aetherized.smartfinance.domain.usecase
+package com.aetherized.smartfinance.features.transactions.domain.usecase
 
-import com.aetherized.smartfinance.data.local.entity.TransactionEntity
-import com.aetherized.smartfinance.data.repository.TransactionRepository
+import com.aetherized.smartfinance.core.database.entity.TransactionEntity
+import com.aetherized.smartfinance.features.transactions.domain.repository.TransactionRepository
 import javax.inject.Inject
 
 class AddTransactionUseCase @Inject constructor(
