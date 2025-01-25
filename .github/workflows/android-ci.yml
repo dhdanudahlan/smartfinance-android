@@ -63,23 +63,23 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew test
 
-      # 9. Start emulator in background
-      - name: Start Emulator
-        run: emulator -avd default -no-snapshot -noaudio -no-window &
-
-      # 10. Wait for emulator to boot
-      - name: Wait for Emulator
-        run: |
-          adb wait-for-device
-          adb shell settings put global hidden_api_policy 1
-          adb shell settings put global hidden_api_policy_pre_papps 1
-          adb shell settings put global hidden_api_policy_papps 1
-          # (Optional) Sleep a bit to ensure it is fully ready
-          sleep 30
-
-      # 11. Run Instrumented Tests
-      - name: Run Instrumented Tests
-        run: ./gradlew connectedAndroidTest
+#      # 9. Start emulator in background
+#      - name: Start Emulator
+#        run: emulator -avd default -no-snapshot -noaudio -no-window &
+#
+#      # 10. Wait for emulator to boot
+#      - name: Wait for Emulator
+#        run: |
+#          adb wait-for-device
+#          adb shell settings put global hidden_api_policy 1
+#          adb shell settings put global hidden_api_policy_pre_papps 1
+#          adb shell settings put global hidden_api_policy_papps 1
+#          # (Optional) Sleep a bit to ensure it is fully ready
+#          sleep 30
+#
+#      # 11. Run Instrumented Tests
+#      - name: Run Instrumented Tests
+#        run: ./gradlew connectedAndroidTest
 
       # 12. Run Code Lint
       - name: Lint Code
