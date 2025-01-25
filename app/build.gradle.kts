@@ -6,7 +6,6 @@ plugins {
     id("com.google.devtools.ksp")
 //    id("com.google.gms.google-services")
     id("kotlin-parcelize")
-    id("kotlin-kapt")
 
 }
 
@@ -58,9 +57,6 @@ android {
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
-kapt {
-    correctErrorTypes = true
-}
 
 dependencies {
     // Core and Lifecycle
@@ -97,13 +93,14 @@ dependencies {
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.dagger.compiler)
+    ksp(libs.hilt.compiler)
         // For instrumentation tests
     androidTestImplementation (libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.compiler)
         // For local unit tests
     testImplementation(libs.hilt.android.testing)
-    kaptTest(libs.hilt.compiler)
+    kspTest(libs.hilt.compiler)
 
     // Room
     implementation(libs.androidx.room.ktx)
