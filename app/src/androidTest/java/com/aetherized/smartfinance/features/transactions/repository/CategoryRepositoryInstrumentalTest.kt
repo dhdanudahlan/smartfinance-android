@@ -8,7 +8,7 @@ import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.utils.CategoryType
-import com.aetherized.smartfinance.features.transactions.domain.repository.CategoryRepository
+import com.aetherized.smartfinance.features.categories.data.repository.CategoryRepository
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

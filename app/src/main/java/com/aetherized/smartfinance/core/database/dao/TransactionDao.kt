@@ -29,5 +29,4 @@ interface TransactionDao {
 
     @Query("SELECT * FROM transactions WHERE categoryId = :categoryId AND is_deleted = 0 ORDER BY timestamp DESC")
     fun getTransactionsByCategory(categoryId: Long): Flow<List<TransactionEntity>>
-
 }

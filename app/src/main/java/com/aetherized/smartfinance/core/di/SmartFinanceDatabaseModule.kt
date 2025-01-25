@@ -9,6 +9,7 @@ import com.aetherized.smartfinance.core.database.dao.TransactionDao
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.core.utils.TransactionValidator
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

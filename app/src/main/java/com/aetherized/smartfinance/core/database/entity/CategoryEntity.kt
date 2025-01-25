@@ -7,6 +7,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.core.utils.CategoryValidator
 
 @Entity (
     tableName = "categories",

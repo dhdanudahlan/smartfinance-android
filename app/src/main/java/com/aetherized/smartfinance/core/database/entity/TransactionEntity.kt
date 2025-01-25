@@ -1,11 +1,18 @@
 package com.aetherized.smartfinance.core.database.entity
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.aetherized.smartfinance.core.utils.TransactionValidator
+import com.aetherized.smartfinance.features.transactions.domain.model.Transaction
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @Entity(
     tableName = "transactions",
@@ -39,5 +46,18 @@ data class TransactionEntity(
     companion object {
         val currentTimestamp: Long
             get() = System.currentTimeMillis()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun toDomainModel(): Transaction {
+        return Transaction(
+            id = this.id,
+            categoryId = this.categoryId,
+            amount = this.amount,
+            note = this.note,
+            timestamp = Instant.ofEpochMilli(this.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime(),
+            isDeleted = this.isDeleted,
+            lastModified = Instant.ofEpochMilli(this.lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime(),
+        )
     }
 }

@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "financial_goals"
 )
-data class FinancialGoalEntity(
+data class FinancialEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val name: String,
