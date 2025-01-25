@@ -1,7 +1,7 @@
 package com.aetherized.smartfinance.features.transactions.domain.usecase
 
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
 import com.aetherized.smartfinance.features.transactions.data.repository.TransactionRepositoryImpl
+import com.aetherized.smartfinance.features.transactions.domain.model.Transaction
 import javax.inject.Inject
 
 class AddTransactionUseCase @Inject constructor(
@@ -13,7 +13,7 @@ class AddTransactionUseCase @Inject constructor(
      */
     private val transactionRepositoryImpl: TransactionRepositoryImpl
 ) {
-    suspend operator fun invoke(transaction: TransactionEntity): Result<Long> {
+    suspend operator fun invoke(transaction: Transaction): Result<Long> {
         return transactionRepositoryImpl.addTransaction(transaction)
     }
 }

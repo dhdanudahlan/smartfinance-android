@@ -7,11 +7,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.aetherized.smartfinance.core.utils.TransactionValidator
 import com.aetherized.smartfinance.features.transactions.domain.model.Transaction
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 
 @Entity(
@@ -48,7 +45,6 @@ data class TransactionEntity(
             get() = System.currentTimeMillis()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun toDomainModel(): Transaction {
         return Transaction(
             id = this.id,

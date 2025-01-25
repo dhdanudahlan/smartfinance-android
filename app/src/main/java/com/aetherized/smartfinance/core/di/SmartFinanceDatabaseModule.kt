@@ -44,14 +44,4 @@ object SmartFinanceDatabaseModule {
             }
         }).fallbackToDestructiveMigration().build()
     }
-
-    @Provides
-    fun provideCategoryDao(database: SmartFinanceDatabase): CategoryDao {
-        return database.categoryDao()
-    }
-
-    @Provides
-    fun provideTransactionDao(database: SmartFinanceDatabase): TransactionDao {
-        return database.transactionDao()
-    }
 }

@@ -1,7 +1,6 @@
 package com.aetherized.smartfinance.core.utils
 
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
 
 class CategoryValidator {
     companion object {

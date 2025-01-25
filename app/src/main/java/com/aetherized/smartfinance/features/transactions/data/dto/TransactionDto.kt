@@ -21,7 +21,6 @@ data class TransactionDto(
     val isDeleted: Boolean = false,
     val lastModified: String
 ) {
-    @RequiresApi(Build.VERSION_CODES.O)
     fun toDomainModel(): Transaction {
         return Transaction(
             id = this.id,
