@@ -1,10 +1,10 @@
 package com.aetherized.smartfinance.features.transactions.data.repository
 
-import kotlinx.coroutines.flow.Flow
 import com.aetherized.smartfinance.features.transactions.domain.model.Transaction
+import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {
-    fun getAllTransactions(limit: Int = 50, offset: Int = 0): Flow<List<Transaction>>
+    fun getAllTransactions(limit: Int, offset: Int): Flow<List<Transaction>>
 
     suspend fun getTransactionById(id: Long): Result<Transaction?>
 
@@ -15,5 +15,4 @@ interface TransactionRepository {
     suspend fun deleteTransaction(id: Long): Result<Unit>
 
     fun getTransactionsByCategory(categoryId: Long): Flow<List<Transaction>>
-
 }

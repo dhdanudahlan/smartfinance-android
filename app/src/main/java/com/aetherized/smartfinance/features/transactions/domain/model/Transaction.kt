@@ -18,13 +18,13 @@ data class Transaction(
 ) {
     fun toEntity(): TransactionEntity {
         return TransactionEntity(
-            id = id,
-            categoryId = categoryId,
-            amount = amount,
-            note = note,
-            timestamp = timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isDeleted = isDeleted,
-            lastModified = lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            id = this.id,
+            categoryId = this.categoryId,
+            amount = this.amount,
+            note = this.note,
+            timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            isDeleted = this.isDeleted,
+            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         )
     }
 

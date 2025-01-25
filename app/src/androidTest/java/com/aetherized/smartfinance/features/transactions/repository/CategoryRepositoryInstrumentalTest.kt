@@ -8,7 +8,7 @@ import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.utils.CategoryType
-import com.aetherized.smartfinance.features.categories.data.repository.CategoryRepository
+import com.aetherized.smartfinance.features.categories.data.repository.CategoryRepositoryImpl
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -22,11 +22,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class CategoryRepositoryInstrumentedTest {
+class CategoryRepositoryImplInstrumentedTest {
 
     private lateinit var db: SmartFinanceDatabase
     private lateinit var dao: CategoryDao
-    private lateinit var repository: CategoryRepository
+    private lateinit var repository: CategoryRepositoryImpl
 
     @Before
     fun setup() {
@@ -37,7 +37,7 @@ class CategoryRepositoryInstrumentedTest {
         ).allowMainThreadQueries().build()
 
         dao = db.categoryDao()
-        repository = CategoryRepository(dao)
+        repository = CategoryRepositoryImpl(dao)
     }
 
     @After

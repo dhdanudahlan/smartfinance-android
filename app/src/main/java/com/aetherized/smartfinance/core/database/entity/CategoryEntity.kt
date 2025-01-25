@@ -8,6 +8,9 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.aetherized.smartfinance.core.utils.CategoryType
 import com.aetherized.smartfinance.core.utils.CategoryValidator
+import com.aetherized.smartfinance.features.categories.domain.model.Category
+import java.time.Instant
+import java.time.ZoneId
 
 @Entity (
     tableName = "categories",
@@ -31,5 +34,17 @@ data class CategoryEntity(
     companion object {
         val currentTimestamp: Long
             get() = System.currentTimeMillis()
+    }
+
+    fun toDomainModel(): Category {
+        return Category(
+            id = this.id,
+            name = this.name,
+            type = this.type,
+            color = this.color,
+            icon = this.icon,
+            isDeleted = this.isDeleted,
+            lastModified = Instant.ofEpochMilli(this.lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        )
     }
 }
