@@ -1,6 +1,7 @@
 package com.aetherized.smartfinance.core.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -33,14 +34,19 @@ object SmartFinanceDatabaseModule {
         ).addCallback(object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                val predefinedCategories = listOf(
-                    CategoryEntity(name = "Other Expenses", type = CategoryType.EXPENSE, color = "#FF0000"),
-                    CategoryEntity(name = "Other Incomes", type = CategoryType.INCOME, color = "#00FF00"),
-                )
-                CoroutineScope(Dispatchers.IO).launch {
-                    val database = provideDatabase(context)
-                    predefinedCategories.forEach { database.categoryDao().insertCategory(it) }
+                try {
+                    val predefinedCategories = listOf(
+                        CategoryEntity(name = "Other Expenses", type = CategoryType.EXPENSE, color = "#FF0000"),
+                        CategoryEntity(name = "Other Incomes", type = CategoryType.INCOME, color = "#00FF00"),
+                    )
+                    CoroutineScope(Dispatchers.IO).launch {
+                        val database = provideDatabase(context)
+                        predefinedCategories.forEach { database.categoryDao().insertCategory(it) }
+                    }
+                } catch (e: Exception) {
+                    e.message?.let { Log.d("SmartFinanceDatabaseModule", it) }
                 }
+
             }
         }).fallbackToDestructiveMigration().build()
     }
