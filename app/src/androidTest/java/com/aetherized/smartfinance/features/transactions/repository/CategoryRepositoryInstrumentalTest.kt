@@ -48,7 +48,7 @@ class CategoryRepositoryImplInstrumentedTest {
     @Test
     fun addCategory_successful() = runBlocking {
         // When
-        val result = repository.addCategory(CategoryEntity(name = "Travel", type = CategoryType.EXPENSE))
+        val result = repository.addCategory(CategoryEntity(name = "Travel", type = CategoryType.EXPENSE).toDomainModel())
 
         // Then
         assertTrue(result.isSuccess)
@@ -63,7 +63,7 @@ class CategoryRepositoryImplInstrumentedTest {
     @Test
     fun addCategory_failure_blankName() = runBlocking {
         // When
-        val result = repository.addCategory(CategoryEntity(name = "", type = CategoryType.EXPENSE))
+        val result = repository.addCategory(CategoryEntity(name = "", type = CategoryType.EXPENSE).toDomainModel())
 
         // Then
         assertTrue(result.isFailure)
@@ -74,7 +74,7 @@ class CategoryRepositoryImplInstrumentedTest {
     @Test
     fun updateCategory() = runBlocking {
         // Insert first
-        val insertResult = repository.addCategory(CategoryEntity(name = "Initial", type = CategoryType.EXPENSE))
+        val insertResult = repository.addCategory(CategoryEntity(name = "Initial", type = CategoryType.EXPENSE).toDomainModel())
         val id = insertResult.getOrNull()!!
 
         // Update
@@ -83,7 +83,7 @@ class CategoryRepositoryImplInstrumentedTest {
             name = "Updated",
             type = CategoryType.EXPENSE,
             lastModified = System.currentTimeMillis()
-        )
+        ).toDomainModel()
         val updateResult = repository.updateCategory(updatedCategory)
 
         // Verify
@@ -95,7 +95,7 @@ class CategoryRepositoryImplInstrumentedTest {
     @Test
     fun deleteCategory() = runBlocking {
         // Insert
-        val insertResult = repository.addCategory(CategoryEntity(name = "Removable", type = CategoryType.EXPENSE))
+        val insertResult = repository.addCategory(CategoryEntity(name = "Removable", type = CategoryType.EXPENSE).toDomainModel())
         val id = insertResult.getOrNull()!!
 
         // Delete
@@ -110,8 +110,8 @@ class CategoryRepositoryImplInstrumentedTest {
     @Test
     fun getAllCategories() = runBlocking {
         // Insert
-        repository.addCategory(CategoryEntity(name = "Cat A", type = CategoryType.EXPENSE))
-        repository.addCategory(CategoryEntity(name = "Cat B", type = CategoryType.INCOME))
+        repository.addCategory(CategoryEntity(name = "Cat A", type = CategoryType.EXPENSE).toDomainModel())
+        repository.addCategory(CategoryEntity(name = "Cat B", type = CategoryType.INCOME).toDomainModel())
 
         // Because it's a Flow, let's collect it once
         val flow = repository.getAllCategories()

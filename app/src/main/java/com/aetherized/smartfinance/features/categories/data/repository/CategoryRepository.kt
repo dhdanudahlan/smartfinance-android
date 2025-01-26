@@ -4,7 +4,7 @@ import com.aetherized.smartfinance.features.categories.domain.model.Category
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
-    fun getAllCategories(limit:Int, offset: Int): Flow<List<Category>>
+    fun getAllCategories(limit:Int = 50, offset: Int = 50): Flow<List<Category>>
 
     suspend fun getCategoryById(id: Long): Result<Category?>
 
