@@ -9,6 +9,6 @@ import javax.inject.Inject
 class DeleteCategoryUseCase @Inject constructor(
     private val repository: CategoryRepository
 ) {
-    suspend operator fun invoke (categoryId: Long): Result<Unit> =
-        repository.deleteCategory(categoryId)
+    suspend operator fun invoke (id: Long): Result<Unit> =
+        repository.deleteCategory(id)
 }

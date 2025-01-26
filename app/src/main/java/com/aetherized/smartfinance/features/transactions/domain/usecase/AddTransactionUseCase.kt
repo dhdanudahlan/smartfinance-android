@@ -5,12 +5,6 @@ import com.aetherized.smartfinance.features.transactions.domain.model.Transactio
 import javax.inject.Inject
 
 class AddTransactionUseCase @Inject constructor(
-    /**
-     * Tests should cover the following edge cases:
-     * - Duplicate transactions with the same data.
-     * - Transactions with invalid or missing fields.
-     * - Valid transactions to ensure proper insertion.
-     */
     private val transactionRepositoryImpl: TransactionRepositoryImpl
 ) {
     suspend operator fun invoke(transaction: Transaction): Result<Long> {
