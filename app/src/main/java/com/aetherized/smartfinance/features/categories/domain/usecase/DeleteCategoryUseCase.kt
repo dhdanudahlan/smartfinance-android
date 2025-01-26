@@ -1,0 +1,14 @@
+package com.aetherized.smartfinance.features.categories.domain.usecase
+
+import com.aetherized.smartfinance.features.categories.data.repository.CategoryRepository
+import com.aetherized.smartfinance.features.categories.domain.model.Category
+import dagger.Provides
+import javax.inject.Inject
+
+
+class DeleteCategoryUseCase @Inject constructor(
+    private val repository: CategoryRepository
+) {
+    suspend operator fun invoke (categoryId: Long): Result<Unit> =
+        repository.deleteCategory(categoryId)
+}
