@@ -73,6 +73,11 @@ dependencies {
     implementation(libs.androidx.paging.common.android)
     implementation(libs.androidx.junit.ktx)
 
+
+    // ViewModel and LiveData integration with Compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
     // Testing
     testImplementation(libs.androidx.core)
         // Unit Tests
