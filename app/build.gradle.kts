@@ -77,6 +77,8 @@ dependencies {
     // ViewModel and LiveData integration with Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
 
     // Testing
     testImplementation(libs.androidx.core)
@@ -98,6 +100,7 @@ dependencies {
 
     // Dagger - Hilt
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.dagger.compiler)
     ksp(libs.hilt.compiler)
         // For instrumentation tests

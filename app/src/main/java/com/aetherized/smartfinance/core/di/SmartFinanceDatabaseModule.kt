@@ -34,19 +34,18 @@ object SmartFinanceDatabaseModule {
         ).addCallback(object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                try {
-                    val predefinedCategories = listOf(
-                        CategoryEntity(name = "Other Expenses", type = CategoryType.EXPENSE, color = "#FF0000"),
-                        CategoryEntity(name = "Other Incomes", type = CategoryType.INCOME, color = "#00FF00"),
-                    )
-                    CoroutineScope(Dispatchers.IO).launch {
+                val predefinedCategories = listOf(
+                    CategoryEntity(name = "Other Expenses", type = CategoryType.EXPENSE, color = "#FF0000"),
+                    CategoryEntity(name = "Other Incomes", type = CategoryType.INCOME, color = "#00FF00")
+                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
                         val database = provideDatabase(context)
                         predefinedCategories.forEach { database.categoryDao().insertCategory(it) }
+                    } catch (e: Exception) {
+                        Log.e("DatabaseCallback", "Error seeding database: ", e)
                     }
-                } catch (e: Exception) {
-                    e.message?.let { Log.d("SmartFinanceDatabaseModule", it) }
                 }
-
             }
         }).fallbackToDestructiveMigration().build()
     }
