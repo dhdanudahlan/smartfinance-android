@@ -6,6 +6,7 @@ plugins {
     id("com.google.devtools.ksp")
 //    id("com.google.gms.google-services")
     id("kotlin-parcelize")
+    alias(libs.plugins.protobuf)
 
 }
 
@@ -79,6 +80,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.adaptive.android)
+
+    // DataStore
+    implementation(libs.androidx.dataStore)
+    implementation(libs.protobuf.javalite)
+    implementation(libs.protobuf.kotlin.lite)
+
 
     // Testing
     testImplementation(libs.androidx.core)
@@ -110,6 +118,7 @@ dependencies {
     testImplementation(libs.hilt.android.testing)
     kspTest(libs.hilt.compiler)
 
+
     // Room
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
@@ -118,11 +127,31 @@ dependencies {
     // Room Encryption (SQLCipher)
     implementation(libs.android.database.sqlcipher)
 
-    // Firebase
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth.ktx)
-    implementation(libs.firebase.firestore.ktx)
+
+//    // Firebase
+//    implementation(platform(libs.firebase.bom))
+//    implementation(libs.firebase.auth.ktx)
+//    implementation(libs.firebase.firestore.ktx)
 
     // MPAndroidChart
 //    implementation(libs.mpandroidchart)
+}
+
+protobuf {
+    protoc {
+        artifact = libs.protobuf.protoc.get().toString()
+    }
+
+    generateProtoTasks {
+        all().forEach { task ->
+            task.builtins {
+                register("java") {
+                    option("lite")
+                }
+                register("kotlin") {
+                    option("lite")
+                }
+            }
+        }
+    }
 }

@@ -22,6 +22,8 @@ activityCompose = "1.10.0"
 composeBom = "2025.01.00"
 lifecycleViewmodelCompose = "2.8.7"
 mpandroidchart = "v3.1.0"
+protobuf = "4.29.2"
+protobufPlugin = "0.9.4"
 roomRuntime = "2.6.1"
 roomTesting = "2.6.1"
 runner = "1.6.2"
@@ -30,6 +32,9 @@ ktlint = "12.1.2"
 junitKtx = "1.2.1"
 navigationRuntimeKtx = "2.8.5"
 navigationCompose = "2.8.5"
+adaptiveAndroid = "1.0.0"
+datastoreCoreAndroid = "1.1.2"
+androidxDataStore = "1.1.2"
 
 [libraries]
 android-database-sqlcipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "androidDatabaseSqlcipher" }
@@ -73,9 +78,15 @@ androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-adaptive-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-android", version.ref = "adaptiveAndroid" }
+androidx-dataStore = { group = "androidx.datastore", name = "datastore", version.ref = "androidxDataStore" }
+protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf" }
+protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }
