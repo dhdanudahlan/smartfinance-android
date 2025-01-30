@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.androidx.dataStore)
     implementation(libs.protobuf.javalite)
     implementation(libs.protobuf.kotlin.lite)
+    implementation(libs.androidx.core.splashscreen)
 
 
     // Testing
