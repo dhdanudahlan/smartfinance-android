@@ -65,6 +65,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
 
+    implementation(libs.kotlinx.serialization.json)
+
     // Jetpack Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -73,6 +75,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.paging.common.android)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.material.icons.core.android)
+    implementation(libs.androidx.material.icons.extended.android)
 
 
     // ViewModel and LiveData integration with Compose
