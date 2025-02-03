@@ -14,9 +14,4 @@ abstract class DataModule {
     internal abstract fun bindUserDataRepository(
         userDataRepository: UserDataRepositoryImpl
     ): UserDataRepository
-
-//    @Binds
-//    internal abstract fun provideTransactionRepository(
-//        transactionRepository: TransactionRepositoryImpl
-//    ): TransactionRepository
 }

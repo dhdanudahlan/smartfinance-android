@@ -14,7 +14,7 @@ interface TransactionDao {
     suspend fun upsertTransaction(transaction: TransactionEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAllTransactions(entities: List<TransactionEntity>): List<Long>
+    suspend fun upsertAllTransactions(transactions: List<TransactionEntity>): List<Long>
 
     @Query("UPDATE transactions SET is_deleted = 1, last_modified = :timestamp, sync_status = :syncStatus WHERE id = :id")
     suspend fun softDeleteTransactionById(id: Long, timestamp: Long = System.currentTimeMillis(), syncStatus: String = SyncStatus.PENDING.name)

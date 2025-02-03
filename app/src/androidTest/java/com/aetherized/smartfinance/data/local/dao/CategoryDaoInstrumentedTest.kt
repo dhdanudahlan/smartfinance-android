@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.features.records.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -92,7 +92,7 @@ class CategoryDaoInstrumentedTest {
         val insertedId = dao.upsertCategory(category)
 
         // Delete
-        dao.deleteCategoryById(insertedId)
+        dao.softDeleteCategoryById(insertedId)
 
         // Verify
         val loadedCategory = dao.getCategoryById(insertedId)

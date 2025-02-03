@@ -6,7 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.aetherized.smartfinance.core.utils.SyncStatus
-import com.aetherized.smartfinance.features.records.domain.model.Transaction
+import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import java.time.Instant
 import java.time.ZoneId
 

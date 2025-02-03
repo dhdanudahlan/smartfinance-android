@@ -6,8 +6,8 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.aetherized.smartfinance.core.utils.SyncStatus
-import com.aetherized.smartfinance.features.records.domain.model.Category
-import com.aetherized.smartfinance.features.records.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.Category
+import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import java.time.Instant
 import java.time.ZoneId
 
@@ -15,7 +15,8 @@ import java.time.ZoneId
     tableName = "categories",
     indices = [
         Index(value = ["last_modified"]),
-        Index(value = ["is_deleted"])
+        Index(value = ["is_deleted"]),
+        Index(value = ["sync_status"])
     ]
 )
 data class CategoryEntity(

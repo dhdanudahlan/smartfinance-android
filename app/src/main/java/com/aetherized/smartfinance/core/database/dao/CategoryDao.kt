@@ -20,7 +20,7 @@ interface CategoryDao {
     @Query("UPDATE categories SET is_deleted = 1, last_modified = :timestamp, sync_status = :syncStatus WHERE id = :id")
     suspend fun softDeleteCategoryById(id: Long, timestamp: Long = System.currentTimeMillis(), syncStatus: String = SyncStatus.PENDING.name)
 
-    @Query("SELECT * FROM categories WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM categories WHERE is_deleted = 0 AND id = :id LIMIT 1")
     suspend fun getCategoryById(id: Long): CategoryEntity?
 
     @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")

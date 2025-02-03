@@ -1,7 +1,7 @@
 package com.aetherized.smartfinance.core.utils
 
 import androidx.room.TypeConverter
-import com.aetherized.smartfinance.features.records.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId

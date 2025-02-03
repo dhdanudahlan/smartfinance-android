@@ -8,4 +8,8 @@ object ErrorHandler {
             else -> "An unexpected error occurred."
         }
     }
+    fun logError(error: Throwable) {
+        // You could log to a remote logging service or simply print for now.
+        println("Error: ${error.message}")
+    }
 }

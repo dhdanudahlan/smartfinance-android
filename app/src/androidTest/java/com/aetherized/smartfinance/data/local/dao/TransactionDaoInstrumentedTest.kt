@@ -9,8 +9,10 @@ import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.database.entity.TransactionEntity
-import com.aetherized.smartfinance.features.records.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -60,10 +62,15 @@ class TransactionDaoInstrumentedTest {
         )
 
         // When
-        val insertedId = transactionDao.insertTransaction(transaction)
+        val insertedId = transactionDao.upsertTransaction(transaction)
 
         // Then
-        val loadedTransaction = transactionDao.getTransactionById(insertedId)
+        val loadedTransactions = transactionDao.getTransactionsByCategoryId(insertedId)
+        var loadedTransaction: Transaction? = null
+        loadedTransactions.collectLatest { list -> loadedTransaction =
+            list.find { it.categoryId == insertedId }?.toDomainModel()
+        }
+
         assertNotNull(loadedTransaction)
         assertEquals(100.0, loadedTransaction?.amount)
         assertEquals(categoryId, loadedTransaction?.categoryId)
@@ -83,7 +90,7 @@ class TransactionDaoInstrumentedTest {
             categoryId = categoryId,
             amount = 100.0
         )
-        val insertedId = transactionDao.insertTransaction(transaction)
+        val insertedId = transactionDao.upsertTransaction(transaction)
 
         // Update
         val updatedTransaction = TransactionEntity(
@@ -91,10 +98,14 @@ class TransactionDaoInstrumentedTest {
             categoryId = categoryId,
             amount = 150.0
         )
-        transactionDao.updateTransaction(updatedTransaction)
+        transactionDao.upsertTransaction(updatedTransaction)
 
         // Verify
-        val loadedTransaction = transactionDao.getTransactionsByCategoryId(insertedId)
+        val loadedTransactions = transactionDao.getTransactionsByCategoryId(insertedId)
+        var loadedTransaction: Transaction? = null
+        loadedTransactions.collectLatest { list -> loadedTransaction =
+            list.find { it.categoryId == insertedId }?.toDomainModel()
+        }
         assertEquals(150.0, loadedTransaction?.amount)
     }
 
@@ -112,13 +123,13 @@ class TransactionDaoInstrumentedTest {
             categoryId = categoryId,
             amount = 100.0
         )
-        val insertedId = transactionDao.insertTransaction(transaction)
+        val insertedId = transactionDao.upsertTransaction(transaction)
 
         // Delete
-        transactionDao.deleteTransactionById(insertedId)
+        transactionDao.softDeleteTransactionById(insertedId)
 
         // Verify
-        val loadedTransaction = transactionDao.getTransactionById(insertedId)
+        val loadedTransaction = transactionDao.getTransactionsByCategoryId(insertedId)
         assertNull(loadedTransaction)
     }
 
@@ -148,16 +159,16 @@ class TransactionDaoInstrumentedTest {
             )
         )
 
-        transactionDao.insertTransaction(TransactionEntity(
+        transactionDao.upsertTransaction(TransactionEntity(
             categoryId = categoryIdFirst,
             amount = 100.0
         ))
-        transactionDao.insertTransaction(TransactionEntity(
+        transactionDao.upsertTransaction(TransactionEntity(
             categoryId = categoryIdSecond,
             amount = 150.0
         ))
         // Insert a deleted category
-        transactionDao.insertTransaction(TransactionEntity(
+        transactionDao.upsertTransaction(TransactionEntity(
             categoryId = categoryIdThird,
             amount = 200.0,
             isDeleted = true

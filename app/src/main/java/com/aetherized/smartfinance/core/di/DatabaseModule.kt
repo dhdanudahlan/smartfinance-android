@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.features.records.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,8 +32,8 @@ internal object DatabaseModule {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 val predefinedCategories = listOf(
-                    CategoryEntity(name = "Other Expenses", type = CategoryType.EXPENSE, color = "#FF0000"),
-                    CategoryEntity(name = "Other Incomes", type = CategoryType.INCOME, color = "#00FF00")
+                    CategoryEntity(name = "Others", type = CategoryType.EXPENSE, color = "#FF0000"),
+                    CategoryEntity(name = "Others", type = CategoryType.INCOME, color = "#00FF00")
                 )
                 CoroutineScope(Dispatchers.IO).launch {
                     try {

@@ -1,6 +1,6 @@
 package com.aetherized.smartfinance.core.database.entity
 
-import com.aetherized.smartfinance.features.records.domain.model.CategoryType
+import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import org.junit.Test
 
 class TransactionEntityEntityTest {
