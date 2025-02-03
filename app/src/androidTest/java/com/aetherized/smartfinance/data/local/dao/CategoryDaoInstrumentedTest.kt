@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.features.records.domain.model.CategoryType
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -50,7 +50,7 @@ class CategoryDaoInstrumentedTest {
         )
 
         // When
-        val insertedId = dao.insertCategory(category)
+        val insertedId = dao.upsertCategory(category)
 
         // Then
         val loadedCategory = dao.getCategoryById(insertedId)
@@ -66,7 +66,7 @@ class CategoryDaoInstrumentedTest {
             name = "Shopping",
             type = CategoryType.EXPENSE
         )
-        val insertedId = dao.insertCategory(category)
+        val insertedId = dao.upsertCategory(category)
 
         // Update
         val updatedCategory = CategoryEntity(
@@ -75,7 +75,7 @@ class CategoryDaoInstrumentedTest {
             type = CategoryType.EXPENSE,
             lastModified = System.currentTimeMillis()
         )
-        dao.updateCategory(updatedCategory)
+        dao.upsertCategory(updatedCategory)
 
         // Verify
         val loadedCategory = dao.getCategoryById(insertedId)
@@ -89,7 +89,7 @@ class CategoryDaoInstrumentedTest {
             name = "Bills",
             type = CategoryType.EXPENSE
         )
-        val insertedId = dao.insertCategory(category)
+        val insertedId = dao.upsertCategory(category)
 
         // Delete
         dao.deleteCategoryById(insertedId)
@@ -102,10 +102,10 @@ class CategoryDaoInstrumentedTest {
     @Test
     fun getAllActiveCategories() = runBlocking {
         // Insert a couple of active categories
-        dao.insertCategory(CategoryEntity(name = "Category A", type = CategoryType.EXPENSE))
-        dao.insertCategory(CategoryEntity(name = "Category B", type = CategoryType.EXPENSE))
+        dao.upsertCategory(CategoryEntity(name = "Category A", type = CategoryType.EXPENSE))
+        dao.upsertCategory(CategoryEntity(name = "Category B", type = CategoryType.EXPENSE))
         // Insert a deleted category
-        dao.insertCategory(CategoryEntity(name = "Category Deleted", type = CategoryType.EXPENSE, isDeleted = true))
+        dao.upsertCategory(CategoryEntity(name = "Category Deleted", type = CategoryType.EXPENSE, isDeleted = true))
 
         // Flow usage: collect the flow and test the emitted values
         val categoriesFlow = dao.getAllActiveCategories()

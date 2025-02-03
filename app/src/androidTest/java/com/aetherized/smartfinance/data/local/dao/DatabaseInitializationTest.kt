@@ -5,7 +5,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.features.records.domain.model.CategoryType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,7 +36,7 @@ class DatabaseInitializationTest {
             CategoryEntity(name = "Other Incomes", type = CategoryType.INCOME, color = "#00FF00")
         )
         CoroutineScope(Dispatchers.IO).launch {
-            predefinedCategories.forEach { database.categoryDao().insertCategory(it) }
+            predefinedCategories.forEach { database.categoryDao().upsertCategory(it) }
         }
     }
 

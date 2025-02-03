@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">SmartFinance</string>
+    
+    <string name="empty">Empty</string>
+
+
+    <string name="feature_accounts_title">Accounts</string>
+    <string name="feature_records_title">Records</string>
+    <string name="feature_reports_title">Reports</string>
+    <string name="feature_others_title">More</string>
 </resources>

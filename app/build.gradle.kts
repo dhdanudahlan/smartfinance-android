@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Lint
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -26,7 +28,9 @@ android {
             useSupportLibrary = true
         }
     }
-
+//    lint {
+//        checkAllWarnings = true
+//    }
     buildTypes {
         release {
             isMinifyEnabled = false

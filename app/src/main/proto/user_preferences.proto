@@ -6,13 +6,12 @@ option java_package = "com.aetherized.smartfinance.core.datastore";
 option java_multiple_files = true;
 
 message UserPreferences {
-  reserved 2;
 
   DarkThemeConfigProto dark_theme_config = 1;
 
-  bool should_hide_onboarding = 3;
+  bool should_hide_onboarding = 2;
 
-  bool use_dynamic_color = 4;
+  bool use_dynamic_color = 3;
 
-  // NEXT AVAILABLE ID: 5
+  // NEXT AVAILABLE ID: 4
 }

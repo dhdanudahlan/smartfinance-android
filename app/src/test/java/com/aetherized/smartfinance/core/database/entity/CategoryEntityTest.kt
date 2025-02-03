@@ -1,6 +1,6 @@
 package com.aetherized.smartfinance.core.database.entity
 
-import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.features.records.domain.model.CategoryType
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test

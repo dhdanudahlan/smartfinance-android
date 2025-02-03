@@ -9,7 +9,7 @@ import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.database.entity.TransactionEntity
-import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.features.records.domain.model.CategoryType
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -52,7 +52,7 @@ class TransactionDaoInstrumentedTest {
             type = CategoryType.EXPENSE,
             color = "#FF0000"
         )
-        val categoryId = categoryDao.insertCategory(category)
+        val categoryId = categoryDao.upsertCategory(category)
 
         val transaction = TransactionEntity(
             categoryId = categoryId,
@@ -77,7 +77,7 @@ class TransactionDaoInstrumentedTest {
             type = CategoryType.EXPENSE,
             color = "#FF0000"
         )
-        val categoryId = categoryDao.insertCategory(category)
+        val categoryId = categoryDao.upsertCategory(category)
 
         val transaction = TransactionEntity(
             categoryId = categoryId,
@@ -94,7 +94,7 @@ class TransactionDaoInstrumentedTest {
         transactionDao.updateTransaction(updatedTransaction)
 
         // Verify
-        val loadedTransaction = transactionDao.getTransactionById(insertedId)
+        val loadedTransaction = transactionDao.getTransactionsByCategoryId(insertedId)
         assertEquals(150.0, loadedTransaction?.amount)
     }
 
@@ -106,7 +106,7 @@ class TransactionDaoInstrumentedTest {
             type = CategoryType.EXPENSE,
             color = "#FF0000"
         )
-        val categoryId = categoryDao.insertCategory(category)
+        val categoryId = categoryDao.upsertCategory(category)
 
         val transaction = TransactionEntity(
             categoryId = categoryId,
@@ -126,21 +126,21 @@ class TransactionDaoInstrumentedTest {
     fun getAllActiveTransactions() = runBlocking {
         // Insert a couple of active categories
 
-        val categoryIdFirst = categoryDao.insertCategory(
+        val categoryIdFirst = categoryDao.upsertCategory(
             CategoryEntity(
                 name = "Groceries",
                 type = CategoryType.EXPENSE,
                 color = "#FF0000"
             )
         )
-        val categoryIdSecond = categoryDao.insertCategory(
+        val categoryIdSecond = categoryDao.upsertCategory(
             CategoryEntity(
                 name = "Food",
                 type = CategoryType.EXPENSE,
                 color = "#FF0000"
             )
         )
-        val categoryIdThird = categoryDao.insertCategory(
+        val categoryIdThird = categoryDao.upsertCategory(
             CategoryEntity(
                 name = "Health",
                 type = CategoryType.EXPENSE,
