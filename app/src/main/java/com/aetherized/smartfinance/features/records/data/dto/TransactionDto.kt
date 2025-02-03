@@ -1,15 +1,6 @@
-package com.aetherized.smartfinance.features.transactions.data.dto
+package com.aetherized.smartfinance.features.records.data.dto
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.aetherized.smartfinance.core.utils.TransactionValidator
-import com.aetherized.smartfinance.features.transactions.domain.model.Transaction
+import com.aetherized.smartfinance.features.records.domain.model.Transaction
 import java.time.LocalDateTime
 
 data class TransactionDto(
@@ -17,9 +8,9 @@ data class TransactionDto(
     val categoryId: Long,
     val amount: Double,
     val note: String? = null,
-    val timestamp: String,
+    val timestamp: String = LocalDateTime.now().toString(),
     val isDeleted: Boolean = false,
-    val lastModified: String
+    val lastModified: String = LocalDateTime.now().toString()
 ) {
     fun toDomainModel(): Transaction {
         return Transaction(

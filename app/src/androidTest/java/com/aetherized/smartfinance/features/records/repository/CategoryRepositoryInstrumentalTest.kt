@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.features.transactions.repository
+package com.aetherized.smartfinance.features.records.repository
 
 import android.content.Context
 import androidx.room.Room
@@ -7,7 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.utils.CategoryType
+import com.aetherized.smartfinance.features.records.domain.model.CategoryType
 import com.aetherized.smartfinance.features.categories.data.repository.CategoryRepositoryImpl
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
@@ -72,7 +72,7 @@ class CategoryRepositoryImplInstrumentedTest {
     }
 
     @Test
-    fun updateCategory() = runBlocking {
+    fun upsert() = runBlocking {
         // Insert first
         val insertResult = repository.addCategory(CategoryEntity(name = "Initial", type = CategoryType.EXPENSE).toDomainModel())
         val id = insertResult.getOrNull()!!
@@ -84,7 +84,7 @@ class CategoryRepositoryImplInstrumentedTest {
             type = CategoryType.EXPENSE,
             lastModified = System.currentTimeMillis()
         ).toDomainModel()
-        val updateResult = repository.updateCategory(updatedCategory)
+        val updateResult = repository.upsert(updatedCategory)
 
         // Verify
         assertTrue(updateResult.isSuccess)
@@ -108,13 +108,13 @@ class CategoryRepositoryImplInstrumentedTest {
     }
 
     @Test
-    fun getAllCategories() = runBlocking {
+    fun getActiveCategories() = runBlocking {
         // Insert
         repository.addCategory(CategoryEntity(name = "Cat A", type = CategoryType.EXPENSE).toDomainModel())
         repository.addCategory(CategoryEntity(name = "Cat B", type = CategoryType.INCOME).toDomainModel())
 
         // Because it's a Flow, let's collect it once
-        val flow = repository.getAllCategories()
+        val flow = repository.getActiveCategories()
         val job = launch {
             flow.collect { categoryList ->
                 assertTrue(categoryList.size >= 2)

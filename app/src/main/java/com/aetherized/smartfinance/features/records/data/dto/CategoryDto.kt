@@ -1,10 +1,8 @@
-package com.aetherized.smartfinance.features.categories.data.dto
+package com.aetherized.smartfinance.features.records.data.dto
 
-import com.aetherized.smartfinance.core.utils.CategoryType
-import com.aetherized.smartfinance.features.categories.domain.model.Category
-import java.time.Instant
+import com.aetherized.smartfinance.features.records.domain.model.Category
+import com.aetherized.smartfinance.features.records.domain.model.CategoryType
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 data class CategoryDto (
     val id: Long = 0L,
@@ -13,7 +11,7 @@ data class CategoryDto (
     val color: String? = null,
     val icon: String? = null,
     val isDeleted: Boolean = false,
-    val lastModified: String,
+    val lastModified: String = LocalDateTime.now().toString(),
 ){
     fun toDomainModel(): Category {
         return Category(
