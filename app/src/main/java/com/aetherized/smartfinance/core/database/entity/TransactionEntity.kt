@@ -6,9 +6,6 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.aetherized.smartfinance.core.utils.SyncStatus
-import com.aetherized.smartfinance.features.finance.domain.model.Transaction
-import java.time.Instant
-import java.time.ZoneId
 
 @Entity(
     tableName = "transactions",
@@ -32,7 +29,7 @@ data class TransactionEntity(
     val id: Long = 0L,
     @ColumnInfo(defaultValue = "0")
     val categoryId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
-    val amount: Double,
+    val amount: Int,
     val note: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "is_deleted")
@@ -41,16 +38,4 @@ data class TransactionEntity(
     val lastModified: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "sync_status")
     val syncStatus: SyncStatus = SyncStatus.PENDING
-) {
-    fun toDomainModel(): Transaction {
-        return Transaction(
-            id = id,
-            categoryId = categoryId,
-            amount = amount,
-            note = note,
-            timestamp = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime(),
-            isDeleted = isDeleted,
-            lastModified = Instant.ofEpochMilli(lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()
-        )
-    }
-}
+)
