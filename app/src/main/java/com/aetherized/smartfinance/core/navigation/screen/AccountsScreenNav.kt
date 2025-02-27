@@ -15,7 +15,7 @@ fun NavGraphBuilder.accountsScreen() {
 //        val navController = rememberNavController()
 //
 //        val nestedNavGraph: @Composable () -> Unit = {
-//            RecordsNavGraph(
+//            TransactionsNavGraph(
 //                navController = navController
 //            )
 //        }

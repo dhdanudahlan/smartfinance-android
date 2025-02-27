@@ -1,4 +1,4 @@
-package com.aetherized.smartfinance.core.navigation
+package com.aetherized.smartfinance.ui.component
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -13,8 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.aetherized.smartfinance.ui.Screen
-import com.aetherized.smartfinance.ui.component.SmartFinanceNavigationBar
-import com.aetherized.smartfinance.ui.component.SmartFinanceNavigationBarItem
 
 @Composable
 fun HomeBottomNavigation(

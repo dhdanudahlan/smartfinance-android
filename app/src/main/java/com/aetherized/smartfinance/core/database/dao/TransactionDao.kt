@@ -32,4 +32,7 @@ interface TransactionDao {
         ORDER BY t.timestamp DESC LIMIT :limit OFFSET :offset
     """)
     fun getTransactionsByCategoryType(categoryType: String, limit: Int = 50, offset: Int = 0): Flow<List<TransactionEntity>>
+
+    @Query("SELECT * FROM transactions WHERE id = :id AND is_deleted = 0")
+    fun getTransactionById(id: Long): Flow<TransactionEntity>
 }

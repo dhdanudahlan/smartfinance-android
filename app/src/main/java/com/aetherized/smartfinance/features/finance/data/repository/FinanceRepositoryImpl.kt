@@ -7,6 +7,8 @@ import com.aetherized.smartfinance.core.utils.CategoryValidator
 import com.aetherized.smartfinance.core.utils.ErrorHandler
 import com.aetherized.smartfinance.core.utils.SyncStatus
 import com.aetherized.smartfinance.core.utils.TransactionValidator
+import com.aetherized.smartfinance.core.utils.toDomainModel
+import com.aetherized.smartfinance.core.utils.toEntity
 import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
@@ -33,6 +35,11 @@ internal class FinanceRepositoryImpl @Inject constructor(
         categoryDao.getCategoriesByType(type.name, limit, offset)
             .map { list -> list.map { it.toDomainModel() } }
 
+
+    override fun getCategoryById(id: Long): Flow<Category> =
+        categoryDao.getCategoryById(id)
+            .map { it.toDomainModel() }
+
     override suspend fun saveCategory(category: Category): Result<Long> {
         return try {
             // Convert to entity, update metadata, and validate
@@ -51,7 +58,7 @@ internal class FinanceRepositoryImpl @Inject constructor(
 
     override suspend fun deleteCategory(id: Long): Result<Unit> {
         return try {
-            // Soft delete: update the record rather than removing it
+            // Soft delete: update the transaction is better than removing it?
             categoryDao.softDeleteCategoryById(
                 id = id,
                 timestamp = System.currentTimeMillis(),
@@ -77,6 +84,12 @@ internal class FinanceRepositoryImpl @Inject constructor(
     override fun getTransactionsByType(categoryType: CategoryType, limit: Int, offset: Int): Flow<List<Transaction>> =
         transactionDao.getTransactionsByCategoryType(categoryType.name, limit, offset)
             .map { list -> list.map { it.toDomainModel() } }
+
+
+    override fun getTransactionById(id: Long): Flow<Transaction> =
+        transactionDao.getTransactionById(id)
+            .map { it.toDomainModel() }
+
 
     override suspend fun saveTransaction(transaction: Transaction): Result<Long> {
         return try {

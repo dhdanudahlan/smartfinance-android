@@ -15,3 +15,4 @@ fun SmartFinanceApp(
         startDestination = Screen.Home
     )
 }
+

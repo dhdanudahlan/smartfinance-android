@@ -3,6 +3,7 @@ package com.aetherized.smartfinance.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +70,7 @@ class MainActivity : ComponentActivity() {
 //                // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
 //                // the UI.
 //                splashScreen.setKeepOnScreenCondition { viewModel.uiState.value.shouldKeepSplashScreen() }
-
+                enableEdgeToEdge()
                 setContent {
                     SmartFinanceApp()
                 }

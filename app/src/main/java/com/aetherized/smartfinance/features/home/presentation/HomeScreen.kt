@@ -8,7 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.aetherized.smartfinance.core.navigation.HomeBottomNavigation
+import com.aetherized.smartfinance.ui.component.HomeBottomNavigation
 import com.aetherized.smartfinance.ui.Screen
 import com.aetherized.smartfinance.ui.component.ScreenBackground
 
@@ -41,7 +41,7 @@ private fun HomeScreenPreview() {
             // TODO: Update this to be changeable
             screens = listOf(
                 Screen.Accounts,
-                Screen.Records,
+                Screen.Transactions,
                 Screen.Reports,
                 Screen.Others
             ),

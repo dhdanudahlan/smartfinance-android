@@ -39,6 +39,7 @@ adaptiveAndroid = "1.0.0"
 datastoreCoreAndroid = "1.1.2"
 androidxDataStore = "1.1.2"
 coreSplashscreen = "1.0.1"
+adaptiveNavigationAndroid = "1.0.0"
 
 [libraries]
 android-database-sqlcipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "androidDatabaseSqlcipher" }
@@ -92,6 +93,7 @@ protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.
 protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
 protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-adaptive-navigation-android = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation-android", version.ref = "adaptiveNavigationAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

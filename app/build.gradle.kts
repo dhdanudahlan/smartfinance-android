@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.adaptive.navigation.android)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     // Jetpack Compose

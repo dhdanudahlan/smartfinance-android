@@ -40,12 +40,12 @@ sealed class Screen(
         iconTextId = R.string.feature_accounts_title,
         titleTextId = R.string.feature_accounts_title,
     )
-    object Records : Screen(
-        route = navigationRouteRecords,
+    object Transactions : Screen(
+        route = navigationRouteTransactions,
         selectedIcon = Icons.AutoMirrored.Rounded.LibraryBooks,
         unselectedIcon = Icons.AutoMirrored.Outlined.LibraryBooks,
-        iconTextId = R.string.feature_records_title,
-        titleTextId = R.string.feature_records_title,
+        iconTextId = R.string.feature_transactions_title,
+        titleTextId = R.string.feature_transactions_title,
     )
     object Reports : Screen(
         route = navigationRouteReports,
@@ -62,8 +62,8 @@ sealed class Screen(
         titleTextId = R.string.feature_others_title,
     )
 
-    object RecordInfo : Screen(
-        route = navigationRouteRecordInfo
+    object TransactionInfo : Screen(
+        route = navigationRouteTransactionInfo
     )
 }
 
@@ -71,10 +71,10 @@ sealed class Screen(
 const val navigationRouteHome = "home"
 
 const val navigationRouteAccounts = "accounts"
-const val navigationRouteRecords = "records"
+const val navigationRouteTransactions = "transactions"
 const val navigationRouteReports = "reports"
 const val navigationRouteOthers = "others"
 
-const val navigationRouteRecordInfo = "record_info"
+const val navigationRouteTransactionInfo = "transaction_info"
 
 

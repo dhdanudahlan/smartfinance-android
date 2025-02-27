@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.aetherized.smartfinance.core.navigation.screen.accountsScreen
 import com.aetherized.smartfinance.core.navigation.screen.othersScreen
-import com.aetherized.smartfinance.core.navigation.screen.recordsScreen
 import com.aetherized.smartfinance.core.navigation.screen.reportsScreen
+import com.aetherized.smartfinance.core.navigation.screen.transactionsScreen
 import com.aetherized.smartfinance.ui.Screen
 
 @Composable
@@ -18,11 +18,11 @@ fun HomeNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Records.route,
+        startDestination = Screen.Transactions.route,
         modifier = modifier
     ) {
         accountsScreen()
-        recordsScreen()
+        transactionsScreen()
         reportsScreen()
         othersScreen()
     }

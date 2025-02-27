@@ -7,11 +7,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.aetherized.smartfinance.core.navigation.HomeBottomNavigation
 import com.aetherized.smartfinance.core.navigation.ext.navigateTo
 import com.aetherized.smartfinance.core.navigation.graph.HomeNavGraph
 import com.aetherized.smartfinance.features.home.presentation.HomeScreen
 import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.ui.component.HomeBottomNavigation
 
 fun NavGraphBuilder.homeScreen(onNavigateToRoot: (Screen) -> Unit) {
     composable(
@@ -30,7 +30,7 @@ fun NavGraphBuilder.homeScreen(onNavigateToRoot: (Screen) -> Unit) {
                 // TODO: Update this to be changeable
                 screens = listOf(
                     Screen.Accounts,
-                    Screen.Records,
+                    Screen.Transactions,
                     Screen.Reports,
                     Screen.Others
                 ),
