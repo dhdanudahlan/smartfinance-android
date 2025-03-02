@@ -1,34 +1,20 @@
-package com.aetherized.smartfinance.core.navigation.graph
+package com.aetherized.smartfinance.core.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionFormScreenContainer
-import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionsScreenContainer
-import com.aetherized.smartfinance.ui.Screen
 
 @Composable
-fun TransactionsNavGraph(
-    modifier: Modifier = Modifier,
-    navController: NavHostController,
-    onNavigateToRoot: (Screen) -> Unit
-) {
+fun FinanceNavGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Transactions.route,
-        modifier = modifier
+        startDestination = "transaction_form?transactionId={transactionId}"
     ) {
-        composable(
-            route = Screen.Transactions.route
-        ) {
-            TransactionsScreenContainer(
-                onNavigate = { route -> navController.navigate(route) },
-            )
-        }
+        // Single route for both create and edit, with an optional transactionId parameter.
         composable(
             route = "transaction_form?transactionId={transactionId}",
             arguments = listOf(

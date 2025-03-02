@@ -1,6 +1,6 @@
 package com.aetherized.smartfinance.features.finance.domain.usecase
 
-import com.aetherized.smartfinance.features.finance.domain.model.TransactionDetails
+import com.aetherized.smartfinance.features.finance.domain.model.TransactionForm
 import com.aetherized.smartfinance.features.finance.domain.repository.FinanceRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -15,10 +15,10 @@ class GetTransactionDetailsUseCase @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke (
         id: Long
-    ): Flow<TransactionDetails> {
+    ): Flow<TransactionForm> {
         return repository.getTransactionById(id).flatMapLatest { transaction ->
             repository.getCategoryById(transaction.categoryId).map { category ->
-                TransactionDetails(transaction, category)
+                TransactionForm(transaction, category)
             }
         }
     }

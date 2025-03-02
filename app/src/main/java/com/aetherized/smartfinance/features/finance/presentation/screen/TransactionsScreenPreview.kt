@@ -112,7 +112,7 @@ fun TransactionsScreenPreview() {
                 onCategoryTypeSelected = {  },
                 onPreviousMonth = {  },
                 onNextMonth = {  },
-                navigateToTransactionDetails = {  }
+                onNavigateTransaction = {  }
             )
         }
     }
@@ -167,5 +167,6 @@ private fun SmartFinanceTransactionsCardPreview() {
     SmartFinanceTransactionsCard(
         dailySummary = dailySummary,
         categories = categories,
+        onNavigateTransaction = { }
     )
 }

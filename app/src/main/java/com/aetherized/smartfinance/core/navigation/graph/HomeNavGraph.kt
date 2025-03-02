@@ -22,7 +22,7 @@ fun HomeNavGraph(
         modifier = modifier
     ) {
         accountsScreen()
-        transactionsScreen()
+        transactionsScreen(onNavigateToRoot)
         reportsScreen()
         othersScreen()
     }

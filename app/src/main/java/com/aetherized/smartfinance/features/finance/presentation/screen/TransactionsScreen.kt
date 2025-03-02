@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.FilterList
@@ -26,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,6 +60,7 @@ import com.aetherized.smartfinance.features.finance.domain.model.DailySummary
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import com.aetherized.smartfinance.features.finance.presentation.TransactionsUIState
 import com.aetherized.smartfinance.features.finance.presentation.TransactionsViewModel
+import com.aetherized.smartfinance.features.finance.presentation.component.capitalize
 import com.aetherized.smartfinance.features.finance.presentation.component.toNumericalString
 import com.aetherized.smartfinance.ui.component.LoadingScreen
 import java.time.LocalDate
@@ -70,8 +73,9 @@ Screen of Transactions
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
-fun TransactionsScreenReady(
-    viewModel: TransactionsViewModel = hiltViewModel()
+fun TransactionsScreenContainer(
+    viewModel: TransactionsViewModel = hiltViewModel(),
+    onNavigate: (String) -> Unit
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
@@ -95,9 +99,9 @@ fun TransactionsScreenReady(
                 onCategoryTypeSelected = { type -> viewModel.onCategoryTypeSelected(type) },
                 onPreviousMonth = viewModel::previousMonth,
                 onNextMonth = viewModel::nextMonth,
-                navigateToTransactionDetails = {
-
-                },
+                onNavigateTransaction = { transactionId ->
+                    onNavigate("transaction_form?transactionId=${transactionId}")
+                }
             )
         }
         is TransactionsUIState.Error -> {
@@ -127,7 +131,7 @@ fun TransactionsScreen(
     onCategoryTypeSelected: (CategoryType) -> Unit,
     onPreviousMonth: () -> Unit,
     onNextMonth: () -> Unit,
-    navigateToTransactionDetails: (Transaction) -> Unit
+    onNavigateTransaction: (Long) -> Unit
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
 
@@ -139,6 +143,13 @@ fun TransactionsScreen(
                 onPreviousMonth = onPreviousMonth,
                 onNextMonth = onNextMonth
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onNavigateTransaction(-1) }
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Transaction")
+            }
         }
     ) { innerPadding ->
         Column(
@@ -159,7 +170,8 @@ fun TransactionsScreen(
                 0 -> {
                     TransactionsTabDailyContent(
                         dailySummaries = dailySummaries,
-                        categories = categories
+                        categories = categories,
+                        onNavigateTransaction = onNavigateTransaction
                     )
                 }
                 else -> {}
@@ -171,7 +183,8 @@ fun TransactionsScreen(
 @Composable
 fun TransactionsTabDailyContent(
     dailySummaries: List<DailySummary>,
-    categories: List<Category>
+    categories: List<Category>,
+    onNavigateTransaction: (Long) -> Unit
 ) {
     // Render a summary row (using precomputed summaries if desired).
     TransactionsSummaryRow(
@@ -187,7 +200,8 @@ fun TransactionsTabDailyContent(
         items(dailySummaries) { dailySummary ->
             SmartFinanceTransactionsCard(
                 dailySummary = dailySummary,
-                categories = categories
+                categories = categories,
+                onNavigateTransaction = onNavigateTransaction
             )
             Spacer(modifier = Modifier.height(2.dp))
         }
@@ -306,7 +320,8 @@ Daily Transaction Rows
 @Composable
 fun SmartFinanceTransactionsCard(
     dailySummary: DailySummary,
-    categories: List<Category>
+    categories: List<Category>,
+    onNavigateTransaction: (Long) -> Unit
 ) {
 
     Card (
@@ -327,7 +342,7 @@ fun SmartFinanceTransactionsCard(
             dailySummary.transactions.forEach { transaction ->
                 val category = categories.find { it.id == transaction.categoryId }
                 if (category != null) {
-                    SmartFinanceTransactionsItem(transaction, category)
+                    SmartFinanceTransactionsItem(transaction, category, onNavigateTransaction)
                 }
             }
         }
@@ -394,12 +409,14 @@ fun SmartFinanceTransactionsHeader(
 @Composable
 fun SmartFinanceTransactionsItem(
     transaction: Transaction,
-    category: Category
+    category: Category,
+    onNavigateTransaction: (Long) -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
+            .clickable { onNavigateTransaction(transaction.id) }
     ) {
         // Each date row
         Row(

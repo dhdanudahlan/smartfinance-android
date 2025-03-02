@@ -1,6 +1,6 @@
 package com.aetherized.smartfinance.features.finance.domain.model
 
-data class TransactionDetails(
+data class TransactionForm(
     val transaction: Transaction,
     val category: Category
 )

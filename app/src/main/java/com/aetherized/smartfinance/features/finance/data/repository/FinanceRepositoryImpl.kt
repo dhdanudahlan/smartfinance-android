@@ -1,5 +1,6 @@
 package com.aetherized.smartfinance.features.finance.data.repository
 
+import android.util.Log
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
 import com.aetherized.smartfinance.core.remote.RemoteDataSource
@@ -100,8 +101,10 @@ internal class FinanceRepositoryImpl @Inject constructor(
             TransactionValidator.validateAmount(entity)
             // Using REPLACE for upsert consistency
             val id = transactionDao.upsertTransaction(entity)
+            Log.d("FinanceRepositoryImpl", "FinanceRepositoryImpl: saveTransaction Success = $id")
             Result.success(id)
         } catch (e: Exception) {
+            Log.d("FinanceRepositoryImpl", "FinanceRepositoryImpl: saveTransaction failed = ${e.message}")
             ErrorHandler.logError(e)
             Result.failure(e)
         }

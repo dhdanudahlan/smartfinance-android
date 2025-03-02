@@ -62,8 +62,11 @@ sealed class Screen(
         titleTextId = R.string.feature_others_title,
     )
 
-    object TransactionInfo : Screen(
-        route = navigationRouteTransactionInfo
+    object TransactionEdit : Screen(
+        route = navigationRouteTransactionEdit
+    )
+    object TransactionCreate : Screen(
+        route = navigationRouteTransactionCreate
     )
 }
 
@@ -75,6 +78,7 @@ const val navigationRouteTransactions = "transactions"
 const val navigationRouteReports = "reports"
 const val navigationRouteOthers = "others"
 
-const val navigationRouteTransactionInfo = "transaction_info"
+const val navigationRouteTransactionEdit = "transaction_edit"
+const val navigationRouteTransactionCreate = "transaction_create"
 
 
