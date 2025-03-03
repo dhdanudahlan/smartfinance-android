@@ -91,7 +91,7 @@ SmartFinance showcases cutting-edge Android development practices, serving as a 
 
 ## Instalation
 1. Clone the repository:
-`git clone https://github.com/your-repo-url.git`
+`git clone https://github.com/dhdanudahlan/smartfinance-android.git`
 2. Open the project in Android Studio.
 3. Sync Gradle files and install dependencies.
 4. Build and run the app on an emulator or physical device.
