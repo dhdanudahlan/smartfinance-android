@@ -1,9 +1,11 @@
 package com.aetherized.smartfinance.core.utils
 
+import com.aetherized.smartfinance.core.database.entity.AccountEntity
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.database.entity.TransactionEntity
 import com.aetherized.smartfinance.features.finance.data.dto.CategoryDto
 import com.aetherized.smartfinance.features.finance.data.dto.TransactionDto
+import com.aetherized.smartfinance.features.finance.domain.model.Account
 import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import java.text.NumberFormat
@@ -17,28 +19,16 @@ import java.util.Locale
 Transaction
 ----------------------------*/
 fun Transaction.toEntity(): TransactionEntity {
-    if (id != (-1).toLong()) {
-        return TransactionEntity(
-            id = this.id,
-            categoryId = this.categoryId,
-            amount = this.amount,
-            accountId = this.accountId,
-            note = this.note,
-            timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isDeleted = this.isDeleted,
-            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-    } else {
-        return TransactionEntity(
-            categoryId = this.categoryId,
-            accountId = this.accountId,
-            amount = this.amount,
-            note = this.note,
-            timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            isDeleted = this.isDeleted,
-            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-    }
+    return TransactionEntity(
+        id = if (this.isNew) 0L else this.id,
+        categoryId = this.categoryId,
+        amount = this.amount,
+        accountId = this.accountId,
+        note = this.note,
+        timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+        isDeleted = this.isDeleted,
+        lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    )
 }
 
 fun Transaction.toDto(): TransactionDto {
@@ -86,26 +76,35 @@ fun TransactionEntity.toDomainModel(): Transaction {
 Category
 ----------------------------*/
 fun Category.toEntity(): CategoryEntity {
-    if (id != (-1).toLong()) {
-        return CategoryEntity(
-            id = this.id,
-            name = this.name,
-            type = this.type,
-            color = this.color,
-            icon = this.icon,
-            isDeleted = this.isDeleted,
-            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-    } else {
-        return CategoryEntity(
-            name = this.name,
-            type = this.type,
-            color = this.color,
-            icon = this.icon,
-            isDeleted = this.isDeleted,
-            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-    }
+    return CategoryEntity(
+        id = if (this.isNew) 0L else this.id,
+        name = this.name,
+        type = this.type,
+        color = this.color,
+        icon = this.icon,
+        isDeleted = this.isDeleted,
+        lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+    )
+//    if (id != (0L).toLong()) {
+//        return CategoryEntity(
+//            id = this.id,
+//            name = this.name,
+//            type = this.type,
+//            color = this.color,
+//            icon = this.icon,
+//            isDeleted = this.isDeleted,
+//            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+//        )
+//    } else {
+//        return CategoryEntity(
+//            name = this.name,
+//            type = this.type,
+//            color = this.color,
+//            icon = this.icon,
+//            isDeleted = this.isDeleted,
+//            lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+//        )
+//    }
 }
 
 fun Category.toDto(): CategoryDto {
@@ -145,6 +144,27 @@ fun CategoryDto.toDomainModel(): Category {
 }
 
 
+/** -------------------------
+Account
+----------------------------*/
+fun Account.toEntity(): AccountEntity = AccountEntity(
+    id = this.id,
+    name = this.name,
+    type = this.type,
+    balance = this.balance,
+    income = this.income,
+    expense = this.expense
+)
+
+fun AccountEntity.toDomainModel(): Account = Account(
+    id = this.id,
+    name = this.name,
+    type = this.type,
+    balance = this.balance,
+    income = this.income,
+    expense = this.expense
+)
+
 
 /** -------------------------
 PRIMARY: Int
@@ -154,5 +174,16 @@ fun Int.toCommaSeparatedString(): String {
     return numberFormat.format(this)
 }
 fun Int.toRupiahString(): String {
+    return "Rp ${this.toCommaSeparatedString()}"
+}
+
+/** -------------------------
+PRIMARY: Double
+----------------------------*/
+fun Double.toCommaSeparatedString(): String {
+    val numberFormat = NumberFormat.getNumberInstance(Locale.US)
+    return numberFormat.format(this)
+}
+fun Double.toRupiahString(): String {
     return "Rp ${this.toCommaSeparatedString()}"
 }

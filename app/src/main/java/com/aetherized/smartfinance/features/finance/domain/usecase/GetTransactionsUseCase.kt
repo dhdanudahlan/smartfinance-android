@@ -19,7 +19,7 @@ class GetTransactionsUseCase @Inject constructor(
         return when {
             categoryId != null -> repository.getTransactionsByCategory(categoryId, limit, offset)
             categoryType != null -> repository.getTransactionsByType(categoryType, limit, offset)
-            else -> repository.getTransactions(limit, offset)
+            else -> repository.getActiveTransactions(limit, offset)
         }
     }
 }

@@ -58,7 +58,7 @@ class CategoryViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val newCategory = Category(
-                    id = id ?: -1,
+                    id = id ?: 0L,
                     name = name,
                     type = type
                 )

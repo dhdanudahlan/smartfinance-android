@@ -58,7 +58,7 @@ import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import com.aetherized.smartfinance.features.finance.domain.model.DailySummary
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
-import com.aetherized.smartfinance.features.finance.presentation.TransactionsUIState
+import com.aetherized.smartfinance.features.finance.presentation.TransactionsUiState
 import com.aetherized.smartfinance.features.finance.presentation.TransactionsViewModel
 import com.aetherized.smartfinance.features.finance.presentation.component.capitalize
 import com.aetherized.smartfinance.features.finance.presentation.component.toNumericalString
@@ -82,12 +82,12 @@ fun TransactionsScreenContainer(
 
 
     when (uiState) {
-        is TransactionsUIState.Loading -> {
+        is TransactionsUiState.Loading -> {
             LoadingScreen("Loading transactions")
         }
-        is TransactionsUIState.Success -> {
+        is TransactionsUiState.Success -> {
             // Pass all necessary data to the detailed screen.
-            val successState = uiState as TransactionsUIState.Success
+            val successState = uiState as TransactionsUiState.Success
             TransactionsScreen(
                 transactions = successState.transactions,
                 categories = successState.categories,
@@ -104,13 +104,13 @@ fun TransactionsScreenContainer(
                 }
             )
         }
-        is TransactionsUIState.Error -> {
-            val errorState = uiState as TransactionsUIState.Error
+        is TransactionsUiState.Error -> {
+            val errorState = uiState as TransactionsUiState.Error
             Log.d("TransactionsUIState.Error.Screen", errorState.message)
             // Display an error message on-screen.
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = (uiState as TransactionsUIState.Error).message,
+                    text = (uiState as TransactionsUiState.Error).message,
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.titleMedium
                 )
@@ -146,7 +146,7 @@ fun TransactionsScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onNavigateTransaction(-1) }
+                onClick = { onNavigateTransaction(0L) }
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Transaction")
             }
@@ -287,8 +287,8 @@ Summary Row: Income, Expenses, Total
 ----------------------------*/
 @Composable
 fun TransactionsSummaryRow(
-    incomes: Int,
-    expenses: Int
+    incomes: Double,
+    expenses: Double
 ) {
     val total = incomes - expenses
     Row(
@@ -305,7 +305,7 @@ fun TransactionsSummaryRow(
 }
 
 @Composable
-fun SummaryRowItem(label: String, value: Int, color: Color) {
+fun SummaryRowItem(label: String, value: Double, color: Color) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = label, fontSize = 14.sp, color = MaterialTheme.colorScheme.secondary)
         Text(text = value.toCommaSeparatedString(), fontSize = 14.sp, color = color)
@@ -351,8 +351,8 @@ fun SmartFinanceTransactionsCard(
 
 @Composable
 fun SmartFinanceTransactionsHeader(
-    incomes: Int,
-    expenses: Int,
+    incomes: Double,
+    expenses: Double,
     localDate: LocalDate
 ) {
     Row(

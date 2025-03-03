@@ -27,10 +27,10 @@ class TransactionsViewModel @Inject constructor(
     private val upsertTransactionUseCase: UpsertTransactionUseCase,
     private val deleteTransactionUseCase: DeleteTransactionUseCase
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<TransactionsUIState>(
-        TransactionsUIState.Loading
+    private val _uiState = MutableStateFlow<TransactionsUiState>(
+        TransactionsUiState.Loading
     )
-    val uiState: StateFlow<TransactionsUIState> = _uiState
+    val uiState: StateFlow<TransactionsUiState> = _uiState
 
     private var selectedCategory: Category? = null
     private var selectedCategoryType: CategoryType = CategoryType.EXPENSE
@@ -42,7 +42,7 @@ class TransactionsViewModel @Inject constructor(
     }
 
     private fun loadTransactions(limit: Int = 50, offset: Int = 0) {
-        _uiState.value = TransactionsUIState.Loading
+        _uiState.value = TransactionsUiState.Loading
 
         viewModelScope.launch {
             try {
@@ -64,7 +64,7 @@ class TransactionsViewModel @Inject constructor(
                         categories = categories,
                         yearMonth = currentYearMonth
                     )
-                    TransactionsUIState.Success(
+                    TransactionsUiState.Success(
                         transactions = transactions,
                         categories = categories,
                         yearMonth = currentYearMonth,
@@ -77,7 +77,7 @@ class TransactionsViewModel @Inject constructor(
                 }
 
             } catch (e: Exception) {
-                _uiState.value = TransactionsUIState.Error(
+                _uiState.value = TransactionsUiState.Error(
                     message = e.message ?: "Unknown error",
                 )
             }
@@ -155,7 +155,7 @@ class TransactionsViewModel @Inject constructor(
 //        viewModelScope.launch {
 //            try {
 //                val newTransaction = Transaction(
-//                    id = id ?: -1,
+//                    id = id ?: 0L,
 //                    categoryId = categoryId,
 //                    amount = amount,
 //                    note = note,

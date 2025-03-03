@@ -74,7 +74,7 @@ internal class FinanceRepositoryImpl @Inject constructor(
 
     // === TRANSACTION OPERATIONS ===
 
-    override fun getTransactions(limit: Int, offset: Int): Flow<List<Transaction>> =
+    override fun getActiveTransactions(limit: Int, offset: Int): Flow<List<Transaction>> =
         transactionDao.getAllActiveTransactions(limit, offset)
             .map { list -> list.map { it.toDomainModel() } }
 

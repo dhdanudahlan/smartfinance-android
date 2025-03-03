@@ -22,7 +22,7 @@ interface FinanceRepository {
 
     // === TRANSACTION OPERATIONS ===
 
-    fun getTransactions(limit: Int, offset: Int): Flow<List<Transaction>>
+    fun getActiveTransactions(limit: Int, offset: Int): Flow<List<Transaction>>
 
     fun getTransactionsByCategory(categoryId: Long, limit: Int, offset: Int): Flow<List<Transaction>>
 

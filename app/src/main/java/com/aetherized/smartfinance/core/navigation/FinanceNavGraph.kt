@@ -20,16 +20,16 @@ fun FinanceNavGraph(navController: NavHostController) {
             arguments = listOf(
                 navArgument("transactionId") {
                     type = NavType.LongType
-                    defaultValue = -1L // Use -1 to denote "no transaction" (create mode)
+                    defaultValue = 0L // Use 0L to denote "no transaction" (create mode)
                 }
             )
         ) { backStackEntry ->
             // Retrieve the transactionId argument.
-            val transactionId = backStackEntry.arguments?.getLong("transactionId") ?: -1L
-            // If transactionId equals -1, treat it as null (create mode).
+            val transactionId = backStackEntry.arguments?.getLong("transactionId") ?: 0L
+            // If transactionId equals 0L, treat it as null (create mode).
             TransactionFormScreenContainer(
-                transactionId = if (transactionId == -1L) null else transactionId,
-                navController = navController
+                transactionId = if (transactionId == 0L) null else transactionId,
+                onTransactionSaved = { }
             )
         }
     }

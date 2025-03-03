@@ -10,6 +10,7 @@ data class Category (
     val icon: String? = null,
     val isDeleted: Boolean = false,
     val lastModified: LocalDateTime = LocalDateTime.now(),
+    val isNew: Boolean = false
 )
 
 enum class CategoryType {

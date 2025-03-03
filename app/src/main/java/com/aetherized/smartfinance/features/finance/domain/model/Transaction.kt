@@ -10,5 +10,6 @@ data class Transaction(
     val note: String? = null,
     val timestamp: LocalDateTime = LocalDateTime.now(),
     val isDeleted: Boolean = false,
-    val lastModified: LocalDateTime = LocalDateTime.now()
+    val lastModified: LocalDateTime = LocalDateTime.now(),
+    val isNew: Boolean = false
 )

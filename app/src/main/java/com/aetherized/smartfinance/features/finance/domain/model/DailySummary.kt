@@ -5,6 +5,6 @@ import java.time.LocalDate
 data class DailySummary(
     val date: LocalDate,
     val transactions: List<Transaction>,
-    val income: Int,   // or Double if needed
-    val expense: Int
+    val income: Double,   // or Double if needed
+    val expense: Double
 )

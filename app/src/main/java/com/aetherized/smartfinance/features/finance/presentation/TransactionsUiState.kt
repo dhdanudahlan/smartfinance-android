@@ -6,8 +6,8 @@ import com.aetherized.smartfinance.features.finance.domain.model.DailySummary
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import java.time.YearMonth
 
-sealed class TransactionsUIState {
-    data object Loading : TransactionsUIState()
+sealed class TransactionsUiState {
+    data object Loading : TransactionsUiState()
     data class Success(
         val transactions: List<Transaction>,
         val categories: List<Category>,
@@ -15,6 +15,6 @@ sealed class TransactionsUIState {
         val selectedCategoryType: CategoryType,
         val yearMonth: YearMonth,
         val dailySummaries: List<DailySummary>
-    ) : TransactionsUIState()
-    data class Error(val message: String) : TransactionsUIState()
+    ) : TransactionsUiState()
+    data class Error(val message: String) : TransactionsUiState()
 }

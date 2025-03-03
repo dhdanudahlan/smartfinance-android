@@ -37,35 +37,41 @@ fun TransactionsScreenPreview() {
     val transactions = listOf(
         Transaction(
             categoryId = categories[0].id,
-            amount = 60000,
+            accountId = 1,
+            amount = 60000.toDouble(),
             note = "Transaction of ${LocalDateTime.now().plusMinutes(1).minute}",
             timestamp = LocalDateTime.now().plusMinutes(1)
         ),
         Transaction(
             categoryId = categories[1].id,
-            amount = 1000,
+            accountId = 1,
+            amount = 1000.toDouble(),
             timestamp = LocalDateTime.now().plusMinutes(2)
         ),
         Transaction(
             categoryId = categories[1].id,
-            amount = 5000,
+            accountId = 1,
+            amount = 5000.toDouble(),
             note = "Transaction of ${LocalDateTime.now().plusMinutes(3).minute}",
             timestamp = LocalDateTime.now().plusMinutes(3)
         ),
         Transaction(
             categoryId = categories[0].id,
-            amount = 1000,
+            accountId = 1,
+            amount = 1000.toDouble(),
             note = "Transaction of ${LocalDateTime.now().minusDays(2).plusMinutes(3).minute}",
             timestamp = LocalDateTime.now().minusDays(2).plusMinutes(3)
         ),
         Transaction(
             categoryId = categories[1].id,
-            amount = 60000,
+            accountId = 1,
+            amount = 60000.toDouble(),
             timestamp = LocalDateTime.now().minusDays(2).plusMinutes(2)
         ),
         Transaction(
             categoryId = categories[1].id,
-            amount = 5000,
+            accountId = 1,
+            amount = 5000.toDouble(),
             note = "Transaction of ${LocalDateTime.now().minusDays(2).plusMinutes(1).minute}",
             timestamp = LocalDateTime.now().minusDays(2).plusMinutes(1)
         )
@@ -136,16 +142,19 @@ private fun SmartFinanceTransactionsCardPreview() {
     val transactions = listOf(
         Transaction(
             categoryId = categories[0].id,
-            amount = 6000000,
+            accountId = 1,
+            amount = 6000000.toDouble(),
             note = "Transaction of 6000000"
         ),
         Transaction(
             categoryId = categories[1].id,
-            amount = 1000,
+            accountId = 1,
+            amount = 1000.toDouble(),
         ),
         Transaction(
             categoryId = categories[1].id,
-            amount = 5000,
+            accountId = 1,
+            amount = 5000.toDouble(),
             note = "Transaction of 5000"
         )
     )

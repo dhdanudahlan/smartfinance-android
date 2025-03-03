@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
-import com.aetherized.smartfinance.core.datastore.UserPreferencesSerializer
 import com.aetherized.smartfinance.core.datastore.UserPreferences
+import com.aetherized.smartfinance.core.datastore.UserPreferencesMigration
+import com.aetherized.smartfinance.core.datastore.UserPreferencesSerializer
 import com.aetherized.smartfinance.core.network.di.ApplicationScope
 import com.aetherized.smartfinance.core.network.di.Dispatcher
 import com.aetherized.smartfinance.core.network.di.SmartFinanceDispatchers.IO
@@ -32,6 +33,7 @@ object DataStoreModule {
     ): DataStore<UserPreferences> =
         DataStoreFactory.create(
             serializer = userPreferencesSerializer,
+            migrations = listOf(UserPreferencesMigration(context)),
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher)
         ) {
             context.dataStoreFile("user_preferences.pb")
