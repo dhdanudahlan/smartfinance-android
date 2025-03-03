@@ -29,7 +29,9 @@ data class TransactionEntity(
     val id: Long = 0L,
     @ColumnInfo(defaultValue = "0")
     val categoryId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
-    val amount: Int,
+    @ColumnInfo(defaultValue = "0")
+    val accountId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
+    val amount: Double,
     val note: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "is_deleted")

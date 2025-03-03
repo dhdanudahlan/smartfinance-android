@@ -22,6 +22,7 @@ fun Transaction.toEntity(): TransactionEntity {
             id = this.id,
             categoryId = this.categoryId,
             amount = this.amount,
+            accountId = this.accountId,
             note = this.note,
             timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
             isDeleted = this.isDeleted,
@@ -30,6 +31,7 @@ fun Transaction.toEntity(): TransactionEntity {
     } else {
         return TransactionEntity(
             categoryId = this.categoryId,
+            accountId = this.accountId,
             amount = this.amount,
             note = this.note,
             timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
@@ -43,6 +45,7 @@ fun Transaction.toDto(): TransactionDto {
     return TransactionDto(
         id = this.id,
         categoryId = this.categoryId,
+        accountId = this.accountId,
         amount = this.amount,
         note = this.note,
         timestamp = this.timestamp.toString(),
@@ -56,6 +59,7 @@ fun TransactionDto.toDomainModel(): Transaction {
     return Transaction(
         id = this.id,
         categoryId = this.categoryId,
+        accountId = this.accountId,
         amount = this.amount,
         note = this.note,
         timestamp = LocalDateTime.parse(this.timestamp),
@@ -66,13 +70,14 @@ fun TransactionDto.toDomainModel(): Transaction {
 
 fun TransactionEntity.toDomainModel(): Transaction {
     return Transaction(
-        id = id,
-        categoryId = categoryId,
-        amount = amount,
-        note = note,
-        timestamp = Instant.ofEpochMilli(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime(),
-        isDeleted = isDeleted,
-        lastModified = Instant.ofEpochMilli(lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()
+        id = this.id,
+        categoryId = this.categoryId,
+        accountId = this.accountId,
+        amount = this.amount,
+        note = this.note,
+        timestamp = Instant.ofEpochMilli(this.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime(),
+        isDeleted = this.isDeleted,
+        lastModified = Instant.ofEpochMilli(this.lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()
     )
 }
 

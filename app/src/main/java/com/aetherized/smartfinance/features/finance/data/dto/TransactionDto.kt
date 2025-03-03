@@ -5,7 +5,8 @@ import java.time.LocalDateTime
 data class TransactionDto(
     val id: Long = 0L,
     val categoryId: Long,
-    val amount: Int,
+    val accountId: Long,
+    val amount: Double,
     val note: String? = null,
     val timestamp: String = LocalDateTime.now().toString(),
     val isDeleted: Boolean = false,
