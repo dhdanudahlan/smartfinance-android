@@ -91,7 +91,7 @@ SmartFinance is a personal finance manager app designed to help users manage the
 
 ## Instalation
 1. Clone the repository:
-`git clone https://github.com/dhdanudahlan/smartfinance-android`
+`git clone https://github.com/dhdanudahlan/smartfinance-android.git`
 2. Open the project in Android Studio.
 3. Sync Gradle files and install dependencies.
 4. Build and run the app on an emulator or physical device.
