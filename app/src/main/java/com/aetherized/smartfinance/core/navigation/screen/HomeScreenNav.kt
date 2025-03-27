@@ -11,36 +11,51 @@ import com.aetherized.smartfinance.core.navigation.ext.navigateTo
 import com.aetherized.smartfinance.core.navigation.graph.HomeNavGraph
 import com.aetherized.smartfinance.features.home.presentation.HomeScreen
 import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.ui.TransactionsScreen
 import com.aetherized.smartfinance.ui.component.HomeBottomNavigation
+import com.aetherized.smartfinance.ui.navigationRouteHome
 
-fun NavGraphBuilder.homeScreen(onNavigateToRoot: (Screen) -> Unit) {
+fun NavGraphBuilder.homeScreenNav(onNavigateToRoot: (Screen) -> Unit) {
     composable(
-        route = Screen.Home.route
+        route = navigationRouteHome
     ) {
-        Log.d("navigation", "------homeNavGraph:START------------")
+//        Log.d("navigation", "------homeNavGraph:START------------")
 
         // NavController for nested graph
         // It will not work for root graph
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 
+        val displayBottomBar = when (navBackStackEntry?.destination?.route) {
+            Screen.Accounts.route -> true
+            Screen.Transactions.route -> true
+            TransactionsScreen.List.route -> true
+            Screen.Reports.route -> true
+            Screen.Others.route -> true
+            else -> false
+        }
+//        Log.d("navigation", "displayBottomBar: $displayBottomBar")
+//        Log.d("navigation", "displayBottomBar Target Route: ${navBackStackEntry?.destination?.route}")
+//        Log.d("navigation", "displayBottomBar Current Route: ${Screen.Transactions.route}")
         val bottomBar: @Composable () -> Unit = {
-            Log.d("navigation", "homeNavGraph:bottomBar")
-            HomeBottomNavigation(
-                // TODO: Update this to be changeable
-                screens = listOf(
-                    Screen.Accounts,
-                    Screen.Transactions,
-                    Screen.Reports,
-                    Screen.Others
-                ),
-                onNavigateTo = navController::navigateTo,
-                currentDestination = navBackStackEntry?.destination
-            )
+//            Log.d("navigation", "homeNavGraph:bottomBar")
+            if (displayBottomBar) {
+                HomeBottomNavigation(
+                    // TODO: Update this to be changeable
+                    screens = listOf(
+                        Screen.Accounts,
+                        Screen.Transactions,
+                        Screen.Reports,
+                        Screen.Others
+                    ),
+                    onNavigateTo = navController::navigateTo,
+                    currentDestination = navBackStackEntry?.destination
+                )
+            }
         }
 
         val nestedNavGraph: @Composable () -> Unit = {
-            Log.d("navigation", "homeNavGraph:nestedNavGraph")
+//            Log.d("navigation", "homeNavGraph:nestedNavGraph")
             HomeNavGraph(
                 navController = navController,
                 onNavigateToRoot = onNavigateToRoot
@@ -52,6 +67,6 @@ fun NavGraphBuilder.homeScreen(onNavigateToRoot: (Screen) -> Unit) {
             nestedNavGraph = nestedNavGraph
         )
 
-        Log.d("navigation", "------homeNavGraph:END------------")
+//        Log.d("navigation", "------homeNavGraph:END------------")
     }
 }
