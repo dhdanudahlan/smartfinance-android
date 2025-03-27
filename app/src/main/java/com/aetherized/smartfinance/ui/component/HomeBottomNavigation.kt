@@ -21,7 +21,7 @@ fun HomeBottomNavigation(
     currentDestination: NavDestination?
 ) {
 
-    Log.d("navigation", "HomeBottomNavigation")
+//    Log.d("navigation", "HomeBottomNavigation")
 
     AnimatedVisibility(
         visible = true,
@@ -31,7 +31,7 @@ fun HomeBottomNavigation(
 
         SmartFinanceNavigationBar {
             screens.forEach { screen ->
-                Log.d("navigation", "HomeBottomNavigation: hierarchy = $currentDestination")
+//                Log.d("navigation", "HomeBottomNavigation: hierarchy = $currentDestination")
 
                 val selected: Boolean =
                     currentDestination?.hierarchy?.any { it.route == screen.route } ?: false
