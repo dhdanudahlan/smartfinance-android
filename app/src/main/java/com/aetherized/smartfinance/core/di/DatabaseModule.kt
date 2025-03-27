@@ -32,8 +32,10 @@ internal object DatabaseModule {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 val predefinedCategories = listOf(
-                    CategoryEntity(name = "Others", type = CategoryType.EXPENSE, color = "#FF0000"),
-                    CategoryEntity(name = "Others", type = CategoryType.INCOME, color = "#00FF00")
+                    CategoryEntity(name = "Other Expense", type = CategoryType.EXPENSE, color = "#FF0000"),
+                    CategoryEntity(name = "Other Income", type = CategoryType.INCOME, color = "#00FF00"),
+                    CategoryEntity(id = 3, name = "New Expense", type = CategoryType.EXPENSE, color = "#00FF00"),
+                    CategoryEntity(id = 4, name = "New Income", type = CategoryType.INCOME, color = "#00FF00")
                 )
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
