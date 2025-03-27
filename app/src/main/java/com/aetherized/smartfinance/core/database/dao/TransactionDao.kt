@@ -22,6 +22,22 @@ interface TransactionDao {
     @Query("SELECT * FROM transactions WHERE is_deleted = 0 ORDER BY timestamp DESC LIMIT :limit OFFSET :offset")
     fun getAllActiveTransactions(limit: Int = 50, offset: Int = 0): Flow<List<TransactionEntity>>
 
+    @Query("""
+        SELECT * FROM transactions
+        WHERE is_deleted = 0
+          AND timestamp >= :startDate
+          AND timestamp < :endDate
+        ORDER BY timestamp DESC
+        LIMIT :limit OFFSET :offset
+    """)
+    fun getActiveTransactionsByDateRange(
+        startDate: Long,
+        endDate: Long,
+        limit: Int = 50,
+        offset: Int = 0
+    ): Flow<List<TransactionEntity>>
+
+
     @Query("SELECT * FROM transactions WHERE categoryId = :categoryId AND is_deleted = 0 ORDER BY timestamp DESC LIMIT :limit OFFSET :offset")
     fun getTransactionsByCategoryId(categoryId: Long, limit: Int = 50, offset: Int = 0): Flow<List<TransactionEntity>>
 
