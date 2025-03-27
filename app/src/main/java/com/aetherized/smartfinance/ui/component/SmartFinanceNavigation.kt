@@ -1,13 +1,14 @@
 package com.aetherized.smartfinance.ui.component
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -52,7 +53,9 @@ fun SmartFinanceNavigationBar(
     content: @Composable RowScope.() -> Unit,
 ) {
     NavigationBar(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(elevation = 4.dp),
         contentColor = SmartFinanceNavigationDefaults.navigationContentColor(),
         tonalElevation = 0.dp,
         content = content,
