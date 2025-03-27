@@ -1,56 +1,74 @@
 package com.aetherized.smartfinance.core.navigation.screen
 
-import android.util.Log
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.aetherized.smartfinance.core.navigation.graph.TransactionsNavGraph
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
+import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionFormScreenContainer
+import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionsScreenContainer
 import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.ui.TransactionsScreen
 
-fun NavGraphBuilder.transactionsScreen(onNavigateToRoot: (Screen) -> Unit) {
-    composable(
+fun NavGraphBuilder.transactionsScreen(
+    onNavigateToRoot: (Screen) -> Unit,
+    navController: NavHostController
+) {
+    navigation(
+        startDestination = Screen.Transactions.route,
         route = Screen.Transactions.route
     ) {
-
-        Log.d("navigation", "------transactionNavGraph:START------------")
-
-        // NavController for nested graph
-        // It will not work for root graph
-        val navController = rememberNavController()
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-
-//        val bottomBar: @Composable () -> Unit = {
-//            Log.d("navigation", "homeNavGraph:bottomBar")
-//            HomeBottomNavigation(
-//                // TODO: Update this to be changeable
-//                screens = listOf(
-//                    Screen.Accounts,
-//                    Screen.Transactions,
-//                    Screen.Reports,
-//                    Screen.Others
-//                ),
-//                onNavigateTo = navController::navigateTo,
-//                currentDestination = navBackStackEntry?.destination
-//            )
-//        }
-
-//        val nestedNavGraph: @Composable () -> Unit = {
-//            Log.d("navigation", "homeNavGraph:nestedNavGraph")
-//            TransactionsNavGraph(
-//                navController = navController,
-//                onNavigateToRoot = onNavigateToRoot
-//            )
-//        }
-
-        TransactionsNavGraph(
-            navController = navController,
-            onNavigateToRoot = onNavigateToRoot
-        )
-
-
-        Log.d("navigation", "------transactionNavGraph:END------------")
+        composable(
+            route = Screen.Transactions.route
+        ) {
+            TransactionsScreenContainer(
+                onTransactionClick = { transactionId ->
+                    // Navigate in edit mode with a valid Long id.
+                    navController.navigate(TransactionsScreen.Form.createRoute(transactionId))
+                },
+                onFabClick = {
+                    // Navigate in add mode (no transactionId provided)
+                    navController.navigate(TransactionsScreen.Form.createRoute())
+                }
+            )
+        }
+        composable(
+            route = "transaction_form?transactionId={transactionId}",
+            arguments = listOf(
+                navArgument("transactionId") {
+                    type = NavType.LongType
+                    defaultValue = 0L // Use 0L to denote "no transaction" (create mode)
+                }
+            )
+        ) { backStackEntry ->
+            // Retrieve the transactionId argument.
+            val transactionId = backStackEntry.arguments?.getLong("transactionId") ?: 0L
+            // If transactionId equals 0L, treat it as null (create mode).
+            TransactionFormScreenContainer(
+//                transactionId = if (transactionId == 0L) null else transactionId,
+                navigateToPrevious = { navController.popBackStack() }
+            )
+        }
     }
+//    composable(
+//        route = Screen.Transactions.route
+//    ) {
+//
+//        Log.d("navigation", "------transactionNavGraph:START------------")
+//
+//        // NavController for nested graph
+//        // It will not work for root graph
+//        val navController = rememberNavController()
+//        val navBackStackEntry by navController.currentBackStackEntryAsState()
+//
+//        TransactionsNavGraph(
+//            navController = navController,
+//            onNavigateToRoot = onNavigateToRoot
+//        )
+//
+//
+//        Log.d("navigation", "------transactionNavGraph:END------------")
+//    }
 
 }
