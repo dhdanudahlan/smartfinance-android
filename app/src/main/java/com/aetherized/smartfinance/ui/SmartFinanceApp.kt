@@ -12,7 +12,6 @@ fun SmartFinanceApp(
 
     RootNavGraph(
         navController = navController,
-        startDestination = Screen.Home
     )
 }
 

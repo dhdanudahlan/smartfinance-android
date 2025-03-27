@@ -5,25 +5,24 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.aetherized.smartfinance.core.navigation.ext.navigateTo
-import com.aetherized.smartfinance.core.navigation.screen.homeScreen
-import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.core.navigation.screen.homeScreenNav
+import com.aetherized.smartfinance.ui.navigationRouteHome
 
 @Composable
 fun RootNavGraph(
     navController: NavHostController,
-    modifier: Modifier = Modifier,
-    startDestination: Screen
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
         route = "root_host",
-        startDestination = startDestination.route,
+        startDestination = navigationRouteHome,
         modifier = modifier
     ) {
 
         val navigateBack: () -> Unit = {
             navController.navigateUp()
         }
-        homeScreen(onNavigateToRoot = navController::navigateTo)
+        homeScreenNav(onNavigateToRoot = navController::navigateTo)
     }
 }
