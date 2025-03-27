@@ -10,7 +10,7 @@ fun NavGraphBuilder.reportsScreen() {
         route = Screen.Reports.route
     ) {
 
-        Log.d("navigation", "------reportsNavGraph:START------------")
+//        Log.d("navigation", "------reportsNavGraph:START------------")
 //
 //        val navController = rememberNavController()
 //
@@ -22,6 +22,6 @@ fun NavGraphBuilder.reportsScreen() {
 
 
 
-        Log.d("navigation", "------reportsNavGraph:END------------")
+//        Log.d("navigation", "------reportsNavGraph:END------------")
     }
 }

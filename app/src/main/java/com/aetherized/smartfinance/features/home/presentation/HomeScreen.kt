@@ -1,6 +1,5 @@
 package com.aetherized.smartfinance.features.home.presentation
 
-import android.util.Log
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,8 +7,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.aetherized.smartfinance.ui.component.HomeBottomNavigation
 import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.ui.component.HomeBottomNavigation
 import com.aetherized.smartfinance.ui.component.ScreenBackground
 
 @Composable
@@ -36,7 +35,7 @@ fun HomeScreen(
 private fun HomeScreenPreview() {
 
     val bottomBar: @Composable () -> Unit = {
-        Log.d("navigationPreview", "homeNavGraph:bottomBar")
+//        Log.d("navigationPreview", "homeNavGraph:bottomBar")
         HomeBottomNavigation(
             // TODO: Update this to be changeable
             screens = listOf(

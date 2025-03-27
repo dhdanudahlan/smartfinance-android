@@ -10,7 +10,7 @@ fun NavGraphBuilder.othersScreen() {
         route = Screen.Others.route
     ) {
 
-        Log.d("navigation", "------othersNavGraph:START------------")
+//        Log.d("navigation", "------othersNavGraph:START------------")
 //
 //        val navController = rememberNavController()
 //
@@ -22,6 +22,6 @@ fun NavGraphBuilder.othersScreen() {
 
 
 
-        Log.d("navigation", "------othersNavGraph:END------------")
+//        Log.d("navigation", "------othersNavGraph:END------------")
     }
 }
