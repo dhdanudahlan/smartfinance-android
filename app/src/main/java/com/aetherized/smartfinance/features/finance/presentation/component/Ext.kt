@@ -25,6 +25,6 @@ fun Int.toNumericalString(): String {
     }
 }
 
-fun String.capitalize(): String {
+fun String.titleCase(): String {
     return this.lowercase().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 }
