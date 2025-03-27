@@ -9,6 +9,7 @@
 /.idea/assetWizardSettings.xml
 /.idea/androidTestResultsUserPreferences.xml
 /.idea/deploymentTargetSelector.xml
+.kotlin/errors/
 .DS_Store
 /build
 /captures
@@ -16,3 +17,11 @@
 .cxx
 local.properties
 /app/schemas
+.gradle/caches/
+.gradle/build-cache/
+*.apk
+*.aab
+*.hprof
+*.swp
+*~
+*.backup
