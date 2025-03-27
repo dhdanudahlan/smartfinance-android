@@ -28,8 +28,8 @@ fun FinanceNavGraph(navController: NavHostController) {
             val transactionId = backStackEntry.arguments?.getLong("transactionId") ?: 0L
             // If transactionId equals 0L, treat it as null (create mode).
             TransactionFormScreenContainer(
-                transactionId = if (transactionId == 0L) null else transactionId,
-                onTransactionSaved = { }
+//                transactionId = if (transactionId == 0L) null else transactionId,
+                navigateToPrevious = { }
             )
         }
     }
