@@ -1,6 +1,5 @@
 package com.aetherized.smartfinance.features.finance.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aetherized.smartfinance.features.finance.domain.model.Category
@@ -26,7 +25,7 @@ class CategoryViewModel @Inject constructor(
     private var selectedType: CategoryType? = null
 
     init {
-        Log.d("UI", "CategoryViewModel init")
+//        Log.d("UI", "CategoryViewModel init")
         loadCategories(selectedType)
     }
 
@@ -38,8 +37,6 @@ class CategoryViewModel @Inject constructor(
             try {
                 getCategoriesUseCase(
                     categoryType = type,
-                    limit = limit,
-                    offset = offset
                 ).collect { categories ->
                     _uiState.value = CategoriesUIState.Success(
                         categories = categories,

@@ -20,11 +20,11 @@ interface CategoryDao {
     @Query("UPDATE categories SET is_deleted = 1, last_modified = :timestamp, sync_status = :syncStatus WHERE id = :id")
     suspend fun softDeleteCategoryById(id: Long, timestamp: Long = System.currentTimeMillis(), syncStatus: String = SyncStatus.PENDING.name)
 
-    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")
-    fun getAllActiveCategories(limit: Int = 50, offset: Int = 0): Flow<List<CategoryEntity>>
+    @Query("SELECT * FROM categories WHERE is_deleted = 0 ORDER BY last_modified DESC")
+    fun getAllActiveCategories(): Flow<List<CategoryEntity>>
 
-    @Query("SELECT * FROM categories WHERE type = :type AND is_deleted = 0 ORDER BY last_modified DESC LIMIT :limit OFFSET :offset")
-    fun getCategoriesByType(type: String, limit: Int = 50, offset: Int = 0): Flow<List<CategoryEntity>>
+    @Query("SELECT * FROM categories WHERE type = :type AND is_deleted = 0 ORDER BY last_modified DESC")
+    fun getCategoriesByType(type: String): Flow<List<CategoryEntity>>
 
     @Query("SELECT * FROM categories WHERE id = :id AND is_deleted = 0")
     fun getCategoryById(id: Long): Flow<CategoryEntity>
