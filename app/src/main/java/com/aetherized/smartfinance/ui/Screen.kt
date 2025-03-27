@@ -15,23 +15,11 @@ import com.aetherized.smartfinance.R
 
 sealed class Screen(
     val route: String,
-    var routePath: String? = null,
-    var clearBackStack: Boolean = false,
-    val restoreState: Boolean = true,
     val selectedIcon: ImageVector? = null,
     val unselectedIcon: ImageVector? = null,
     @StringRes val iconTextId: Int = R.string.empty,
     @StringRes val titleTextId: Int = R.string.empty,
 ) {
-    fun withClearBackStack() = apply { clearBackStack = true }
-
-    fun routeWith(path: String) = apply {
-        routePath = path
-    }
-
-    object Home : Screen(
-        route = navigationRouteHome
-    )
 
     object Accounts : Screen(
         route = navigationRouteAccounts,
@@ -40,13 +28,15 @@ sealed class Screen(
         iconTextId = R.string.feature_accounts_title,
         titleTextId = R.string.feature_accounts_title,
     )
-    object Transactions : Screen(
+
+    object Transactions: Screen(
         route = navigationRouteTransactions,
         selectedIcon = Icons.AutoMirrored.Rounded.LibraryBooks,
         unselectedIcon = Icons.AutoMirrored.Outlined.LibraryBooks,
         iconTextId = R.string.feature_transactions_title,
         titleTextId = R.string.feature_transactions_title,
     )
+
     object Reports : Screen(
         route = navigationRouteReports,
         selectedIcon = Icons.Rounded.InsertChart,
@@ -62,13 +52,24 @@ sealed class Screen(
         titleTextId = R.string.feature_others_title,
     )
 
-    object TransactionEdit : Screen(
-        route = navigationRouteTransactionEdit
-    )
-    object TransactionCreate : Screen(
-        route = navigationRouteTransactionCreate
-    )
 }
+
+
+sealed class TransactionsScreen(
+    val route: String,
+){
+    object List : TransactionsScreen("transactionList")
+    // For Form, we use an optional query parameter "transactionId".
+    // When not provided, we'll rely on the default value.
+    object Form : TransactionsScreen("transactionForm?transactionId={transactionId}") {
+        fun createRoute(transactionId: Long? = null): String {
+            return if (transactionId == null) "transactionForm"
+            else "transactionForm?transactionId=$transactionId"
+        }
+    }
+}
+
+
 
 // ----- Route Constants -----
 const val navigationRouteHome = "home"
@@ -78,7 +79,7 @@ const val navigationRouteTransactions = "transactions"
 const val navigationRouteReports = "reports"
 const val navigationRouteOthers = "others"
 
-const val navigationRouteTransactionEdit = "transaction_edit"
-const val navigationRouteTransactionCreate = "transaction_create"
+const val navigationRouteTransactionList = "transactionList"
+const val navigationRouteTransactionForm = "transaction_create"
 
 
