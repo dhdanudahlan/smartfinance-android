@@ -9,6 +9,7 @@ import com.aetherized.smartfinance.features.finance.domain.repository.FinanceRep
 import com.aetherized.smartfinance.features.finance.domain.usecase.DeleteCategoryUseCase
 import com.aetherized.smartfinance.features.finance.domain.usecase.DeleteTransactionUseCase
 import com.aetherized.smartfinance.features.finance.domain.usecase.GetCategoriesUseCase
+import com.aetherized.smartfinance.features.finance.domain.usecase.GetMonthlyTransactionsUseCase
 import com.aetherized.smartfinance.features.finance.domain.usecase.GetTransactionsUseCase
 import com.aetherized.smartfinance.features.finance.domain.usecase.UpsertCategoryUseCase
 import com.aetherized.smartfinance.features.finance.domain.usecase.UpsertTransactionUseCase
@@ -43,6 +44,10 @@ object FinanceDataModule {
     @Provides
     fun provideGetTransactionsUseCase(repository: FinanceRepository): GetTransactionsUseCase =
         GetTransactionsUseCase(repository)
+
+    @Provides
+    fun provideGetMonthlyTransactionsUseCase(repository: FinanceRepository): GetMonthlyTransactionsUseCase =
+        GetMonthlyTransactionsUseCase(repository)
 
     @Provides
     fun provideDeleteCategoryUseCase(repository: FinanceRepository): DeleteCategoryUseCase =
