@@ -4,14 +4,15 @@ import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import kotlinx.coroutines.flow.Flow
+import java.time.YearMonth
 
 interface FinanceRepository {
 
     // === CATEGORY OPERATIONS ===
 
-    fun getActiveCategories(limit:Int = 50, offset: Int = 0): Flow<List<Category>>
+    fun getActiveCategories(): Flow<List<Category>>
 
-    fun getCategoriesByType(type: CategoryType, limit:Int = 50, offset: Int = 0): Flow<List<Category>>
+    fun getCategoriesByType(type: CategoryType): Flow<List<Category>>
 
     fun getCategoryById(id: Long):Flow<Category>
 
@@ -39,4 +40,7 @@ interface FinanceRepository {
 
     suspend fun syncData(): Result<Unit>
 
+    fun getMonthlyActiveTransactions(yearMonth: YearMonth, limit: Int, offset: Int): Flow<List<Transaction>>
+
+    fun getYearlyActiveTransactions(yearMonth: YearMonth, limit: Int, offset: Int): Flow<List<Transaction>>
 }

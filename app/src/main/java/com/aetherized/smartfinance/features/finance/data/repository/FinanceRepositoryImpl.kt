@@ -1,6 +1,5 @@
 package com.aetherized.smartfinance.features.finance.data.repository
 
-import android.util.Log
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
 import com.aetherized.smartfinance.core.remote.RemoteDataSource
@@ -16,6 +15,9 @@ import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import com.aetherized.smartfinance.features.finance.domain.repository.FinanceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.Year
+import java.time.YearMonth
+import java.time.ZoneId
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,12 +30,12 @@ internal class FinanceRepositoryImpl @Inject constructor(
 
     // === CATEGORY OPERATIONS ===
 
-    override fun getActiveCategories(limit: Int, offset: Int): Flow<List<Category>> =
-        categoryDao.getAllActiveCategories(limit, offset)
+    override fun getActiveCategories(): Flow<List<Category>> =
+        categoryDao.getAllActiveCategories()
             .map { list -> list.map { it.toDomainModel() } }
 
-    override fun getCategoriesByType(type: CategoryType, limit: Int, offset: Int): Flow<List<Category>> =
-        categoryDao.getCategoriesByType(type.name, limit, offset)
+    override fun getCategoriesByType(type: CategoryType): Flow<List<Category>> =
+        categoryDao.getCategoriesByType(type.name)
             .map { list -> list.map { it.toDomainModel() } }
 
 
@@ -78,6 +80,49 @@ internal class FinanceRepositoryImpl @Inject constructor(
         transactionDao.getAllActiveTransactions(limit, offset)
             .map { list -> list.map { it.toDomainModel() } }
 
+    override fun getMonthlyActiveTransactions(yearMonth: YearMonth, limit: Int, offset: Int): Flow<List<Transaction>> {
+        val zoneId = ZoneId.systemDefault()
+
+        val startOfMonth = yearMonth
+            .atDay(1)
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli()
+
+        val endOfMonth = yearMonth
+            .plusMonths(1)
+            .atDay(1)
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli()
+
+        return transactionDao.getActiveTransactionsByDateRange(startOfMonth, endOfMonth, limit, offset)
+            .map { list -> list.map { it.toDomainModel() } }
+    }
+
+    override fun getYearlyActiveTransactions(yearMonth: YearMonth, limit: Int, offset: Int): Flow<List<Transaction>> {
+        val zoneId = ZoneId.systemDefault()
+        val year = yearMonth.year
+
+        val startOfYear = Year.of(year)
+            .atDay(1)
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli()
+
+
+
+        val endOfYear = Year.of(year)
+            .plusYears(1)
+            .atDay(1)
+            .atStartOfDay(zoneId)
+            .toInstant()
+            .toEpochMilli()
+
+        return transactionDao.getActiveTransactionsByDateRange(startOfYear, endOfYear, limit, offset)
+            .map { list -> list.map { it.toDomainModel() } }
+    }
+
     override fun getTransactionsByCategory(categoryId: Long, limit: Int, offset: Int): Flow<List<Transaction>> =
         transactionDao.getTransactionsByCategoryId(categoryId, limit, offset)
             .map { list -> list.map { it.toDomainModel() } }
@@ -101,10 +146,10 @@ internal class FinanceRepositoryImpl @Inject constructor(
             TransactionValidator.validateAmount(entity)
             // Using REPLACE for upsert consistency
             val id = transactionDao.upsertTransaction(entity)
-            Log.d("FinanceRepositoryImpl", "FinanceRepositoryImpl: saveTransaction Success = $id")
+//            Log.d("FinanceRepositoryImpl", "FinanceRepositoryImpl: saveTransaction Success = $id")
             Result.success(id)
         } catch (e: Exception) {
-            Log.d("FinanceRepositoryImpl", "FinanceRepositoryImpl: saveTransaction failed = ${e.message}")
+//            Log.d("FinanceRepositoryImpl", "FinanceRepositoryImpl: saveTransaction failed = ${e.message}")
             ErrorHandler.logError(e)
             Result.failure(e)
         }
