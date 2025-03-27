@@ -1,5 +1,6 @@
 package com.aetherized.smartfinance.features.finance.presentation
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,15 +12,31 @@ import com.aetherized.smartfinance.features.finance.domain.usecase.GetCategories
 import com.aetherized.smartfinance.features.finance.domain.usecase.GetTransactionDetailsUseCase
 import com.aetherized.smartfinance.features.finance.domain.usecase.UpsertTransactionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+sealed interface TransactionFormEvent {
+    object FetchData : TransactionFormEvent
+    object DeleteTransaction : TransactionFormEvent
+    object SaveTransaction : TransactionFormEvent
+    object ContinueTransaction : TransactionFormEvent
+    object CopyTransaction : TransactionFormEvent
+    data class SetCategoryType(val categoryType: CategoryType = CategoryType.EXPENSE) : TransactionFormEvent
+    data class SetCategory(val category: Category) : TransactionFormEvent
+    data class SetDateTime(val dateTime: LocalDateTime) : TransactionFormEvent
+    data class SetAmount(val amount: String) : TransactionFormEvent
+    data class SetNote(val note: String) : TransactionFormEvent
+    data class ValidateForm(val form: TransactionForm) : TransactionFormEvent
+}
 @HiltViewModel
 class TransactionFormViewModel @Inject constructor(
     private val getTransactionDetailsUseCase: GetTransactionDetailsUseCase,
@@ -29,159 +46,257 @@ class TransactionFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    // Retrieve the transactionId from the SavedStateHandle
     private val transactionId: Long? = savedStateHandle["transactionId"]
 
-    private val _uiState = MutableStateFlow<TransactionFormUiState>(TransactionFormUiState.Initial)
-    val uiState: StateFlow<TransactionFormUiState> = _uiState.asStateFlow()
+    private val _transactionFormUiState = MutableStateFlow<TransactionFormUiState>(TransactionFormUiState.Loading())
+    val transactionFormUiState: StateFlow<TransactionFormUiState> = _transactionFormUiState.asStateFlow()
+
+
 
     init {
-        loadTransaction()
-//        loadCategories()
+        onEvent(TransactionFormEvent.FetchData)
     }
 
-    private fun loadCategories() {
+    fun onEvent(event: TransactionFormEvent) {
+        when (event) {
+            TransactionFormEvent.ContinueTransaction -> continueTransaction()
+            TransactionFormEvent.CopyTransaction -> {
+                TODO()
+            }
+            TransactionFormEvent.DeleteTransaction -> deleteTransaction()
+            TransactionFormEvent.FetchData -> {
+                fetchCategories()
+                fetchData()
+            }
+            TransactionFormEvent.SaveTransaction -> saveTransaction()
+            is TransactionFormEvent.SetAmount -> setAmount(event.amount)
+            is TransactionFormEvent.SetCategory -> setCategory(event.category)
+            is TransactionFormEvent.SetCategoryType -> setCategoryType(event.categoryType)
+            is TransactionFormEvent.SetDateTime -> setDateTime(event.dateTime)
+            is TransactionFormEvent.SetNote -> setNote(event.note)
+            is TransactionFormEvent.ValidateForm -> validateForm(event.form)
+        }
+    }
+    private fun fetchCategories() {
         viewModelScope.launch {
             getCategoriesUseCase()
+                .retryWhen { _, attempt ->
+                    if (attempt < 5) {
+                        delay(1000)
+                        true
+                    } else {
+                        false
+                    }
+                }
+                .catch { e ->
+                    _transactionFormUiState.update { currentState ->
+                        TransactionFormUiState.Error(
+                            e.message ?: "Error loading categories",
+                            categories = currentState.categories
+                        )
+                    }
+                }
                 .collect { categories ->
-                    _uiState.update { currentState ->
-                        if (currentState is TransactionFormUiState.FormState) {
-                            currentState.copy(categories = categories)
-                        } else {
-                            TransactionFormUiState.FormState(categories = categories)
+                    _transactionFormUiState.update { currentState ->
+                        when (currentState) {
+                            is TransactionFormUiState.Loading -> {
+                                currentState.copy(categories = categories)
+                            }
+
+                            is TransactionFormUiState.Success -> {
+                                currentState.copy(categories = categories)
+                            }
+                            else -> {
+                                TransactionFormUiState.Loading(categories = categories)
+                            }
                         }
                     }
                 }
         }
     }
 
-    private fun loadTransaction() {
+    private fun fetchData() {
         transactionId?.let { id ->
+            if (id == 0L) {
+                _transactionFormUiState.update { currentState ->
+                    Log.d("TransactionFormViewModel", "currentState categories: ${currentState.categories}")
+                    TransactionFormUiState.Empty(categories = currentState.categories)
+                }
+                return
+            }
             viewModelScope.launch {
-                _uiState.value = TransactionFormUiState.Loading
-                try {
-                    combine(
-                        getTransactionDetailsUseCase(id),
-                        getCategoriesUseCase(),
-                    ) { transactionDetails, categories ->
-                        _uiState.value = TransactionFormUiState.FormState(
+                combine(
+                    getTransactionDetailsUseCase(id),
+                    getCategoriesUseCase(),
+                ) { transactionDetails, categories ->
+                    Log.d("TransactionFormViewModel", "Fetched categories: $categories")
+                    TransactionFormUiState.Success(
+                        transactionData = TransactionData(
                             categoryType = transactionDetails.category.type,
                             category = transactionDetails.category,
                             dateTime = transactionDetails.transaction.timestamp,
-                            amount = transactionDetails.transaction.amount,
+                            amount = transactionDetails.transaction.amount.toString(),
                             note = transactionDetails.transaction.note.orEmpty(),
-                            categories = categories
-                        )
-                    }
-                } catch (e: Exception) {
-                    _uiState.value = TransactionFormUiState.Error(e.message ?: "Failed to load transaction")
+                        ),
+                        formState = FormState(
+                            transactionForm = TransactionForm(
+                                categoryType = transactionDetails.category.type,
+                                category = transactionDetails.category,
+                                dateTime = transactionDetails.transaction.timestamp,
+                                amount = transactionDetails.transaction.amount.toString(),
+                                note = transactionDetails.transaction.note.orEmpty(),
+                            ),
+                            isNew = false,
+                        ),
+                        categories = categories
+                    )
                 }
+                    .catch { e ->
+                        _transactionFormUiState.update { currentState ->
+                            TransactionFormUiState.Error(
+                                message = e.message ?: "Failed to load transaction",
+                                categories = currentState.categories
+                            )
+                        }
+                    }
+                    .collect { combinedUiState ->
+                        _transactionFormUiState.update { combinedUiState }
+                        Log.d("TransactionFormViewModel", "combinedUiState categories: ${combinedUiState.categories}")
+                    }
             }
         }
     }
 
-    // Update form state based on user input
-    fun updateFormState(newState: TransactionFormUiState.FormState) {
-        _uiState.value = newState
-    }
-
     // Handle category type change
-    fun onCategoryTypeChanged(categoryType: CategoryType) {
-        _uiState.update { currentState ->
-            if (currentState is TransactionFormUiState.FormState) {
-                currentState.copy(categoryType = categoryType, category = null)
-            } else {
-                TransactionFormUiState.FormState(categoryType = categoryType)
-            }
+    private fun setCategoryType(categoryType: CategoryType) {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            TransactionFormUiState.Success(
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(categoryType = categoryType), isEditMode = true),
+                categories = currentState.categories
+            )
         }
     }
 
     // Handle category change
-    fun onCategoryChanged(category: Category?) {
-        _uiState.update { currentState ->
-            if (currentState is TransactionFormUiState.FormState) {
-                currentState.copy(category = category)
-            } else {
-                TransactionFormUiState.FormState(category = category)
-            }
+    private fun setCategory(category: Category?) {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            TransactionFormUiState.Success(
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(category = category), isEditMode = true),
+                categories = currentState.categories
+            )
         }
     }
 
     // Handle date and time change
-    fun onDateTimeChanged(dateTime: LocalDateTime) {
-        _uiState.update { currentState ->
-            if (currentState is TransactionFormUiState.FormState) {
-                currentState.copy(dateTime = dateTime)
-            } else {
-                TransactionFormUiState.FormState(dateTime = dateTime)
-            }
+    private fun setDateTime(dateTime: LocalDateTime) {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            TransactionFormUiState.Success(
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(dateTime = dateTime), isEditMode = true),
+                categories = currentState.categories
+            )
         }
     }
 
     // Handle amount change
-    fun onAmountChanged(amount: String) {
-        _uiState.update { currentState ->
-            if (currentState is TransactionFormUiState.FormState) {
-                currentState.copy(amount = amount.toDouble(), amountError = null)
+    private fun setAmount(amount: String) {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            val parsedAmount = amount.toDoubleOrNull()
+            if (parsedAmount == null || parsedAmount <= 0) {
+                TransactionFormUiState.Success(
+                    formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(amount = amount), amountError = "Invalid amount", isEditMode = true),
+                    categories = currentState.categories
+                )
             } else {
-                TransactionFormUiState.FormState(amount = amount.toDouble())
+                TransactionFormUiState.Success(
+                    formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(amount = amount), amountError = null, isEditMode = true),
+                    categories = currentState.categories
+                )
             }
+
         }
     }
 
     // Handle note change
-    fun onNoteChanged(note: String) {
-        _uiState.update { currentState ->
-            if (currentState is TransactionFormUiState.FormState) {
-                currentState.copy(note = note)
-            } else {
-                TransactionFormUiState.FormState(note = note)
-            }
-        }
-
-    }
-
-    fun onDeleteClicked() {
-        _uiState.update { currentState ->
-            if (currentState is TransactionFormUiState.FormState) {
-                currentState.copy(isDeleted = true)
-            } else {
-                TransactionFormUiState.FormState(isDeleted = true)
-            }
+    private fun setNote(note: String) {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            TransactionFormUiState.Success(
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(note = note), isEditMode = true),
+                categories = currentState.categories
+            )
         }
     }
 
-    fun continueTransaction() {
-        _uiState.update { currentState ->
-            (currentState as TransactionFormUiState.FormState).copy(
-                    amount = 0.0,
-                    note = "",
-                    amountError = null,
-                    categoryError = null,
-                    isDeleted = false
+    private fun deleteTransaction() {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            val originalData = (currentState as? TransactionFormUiState.Success)?.transactionData
+                ?: TransactionData(
+                    categoryType = currentForm.transactionForm.categoryType,
+                    category = currentForm.transactionForm.category,
+                    dateTime = currentForm.transactionForm.dateTime,
+                    amount = currentForm.transactionForm.amount,
+                    note = currentForm.transactionForm.note,
+                    isDeleted = currentForm.transactionForm.isDeleted
                 )
+            TransactionFormUiState.Success(
+                formState = currentForm.copy(
+                    transactionForm = currentForm.transactionForm.copy(
+                        categoryType = originalData.categoryType,
+                        category = originalData.category,
+                        dateTime = originalData.dateTime,
+                        amount = originalData.amount,
+                        note = originalData.note,
+                        isDeleted = true
+                    )
+                ),
+                categories = currentState.categories
+            )
+        }
+        saveTransaction()
+    }
+
+    private fun continueTransaction() {
+        saveTransaction()
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            TransactionFormUiState.Success(
+                formState = FormState(
+                    transactionForm = currentForm.transactionForm.copy(
+                        amount = "",
+                        note = "",
+                        isDeleted = false
+                    )
+                ),
+                categories = currentState.categories
+            )
         }
     }
 
     // Save transaction to the repository
-    fun saveTransaction() {
-        val currentState = _uiState.value as? TransactionFormUiState.FormState ?: return
-        if (validateForm(currentState)) {
+    private fun saveTransaction() {
+        val currentForm = (transactionFormUiState.value as? TransactionFormUiState.Success)?.formState ?: (transactionFormUiState.value as? TransactionFormUiState.Loading)?.formState ?: FormState()
+
+        if (validateForm(currentForm.transactionForm)) {
             viewModelScope.launch {
-                _uiState.value = TransactionFormUiState.Loading
                 try {
                     val transaction = Transaction(
                         id = transactionId ?: 0L, // Use transactionId if available
-                        categoryId = currentState.category!!.id,
+                        categoryId = currentForm.transactionForm.category!!.id,
                         accountId = 1L, // Replace with actual account ID
-                        amount = currentState.amount.toDouble(),
-                        note = currentState.note,
-                        timestamp = currentState.dateTime,
-                        isDeleted = currentState.isDeleted
+                        amount = currentForm.transactionForm.amount.toDouble(),
+                        note = currentForm.transactionForm.note,
+                        timestamp = currentForm.transactionForm.dateTime,
+                        isDeleted = currentForm.transactionForm.isDeleted
                     )
-                    upsertTransactionUseCase(transaction)
-                    _uiState.value = TransactionFormUiState.Success(transaction)
+
                 } catch (e: Exception) {
-                    _uiState.value = TransactionFormUiState.Error(e.message ?: "Failed to save transaction")
+                    val errorMsg = e.message ?: "Failed to save transaction"
                 }
             }
         }
@@ -189,133 +304,37 @@ class TransactionFormViewModel @Inject constructor(
 
 
     // Validate form data
-    private fun validateForm(state: TransactionFormUiState.FormState): Boolean {
+    fun validateForm(form: TransactionForm): Boolean {
         var isValid = true
-        if (state.amount <= 0) {
-            _uiState.value = state.copy(amountError = "Invalid amount")
+        if (form.amount.isBlank()) {
+            _transactionFormUiState.update { currentState ->
+                val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+                TransactionFormUiState.Success(
+                    formState = currentForm.copy(amountError = "Please enter a number"),
+                    categories = currentState.categories
+                )
+            }
+            isValid = false
+        } else if (form.amount.toDouble() <= 0) {
+            _transactionFormUiState.update { currentState ->
+                val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+                TransactionFormUiState.Success(
+                    formState = currentForm.copy(amountError = "Invalid Amount"),
+                    categories = currentState.categories
+                )
+            }
             isValid = false
         }
-        if (state.category == null) {
-            _uiState.value = state.copy(categoryError = "Please select a category")
+        if (form.category == null) {
+            _transactionFormUiState.update { currentState ->
+                val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+                TransactionFormUiState.Success(
+                    formState = currentForm.copy(categoryError = "Please select a category"),
+                    categories = currentState.categories
+                )
+            }
             isValid = false
         }
         return isValid
     }
 }
-//
-//
-//    // Retrieve the transaction ID from the savedStateHandle (passed via navigation)
-//    private val transactionId: Long = savedStateHandle["transactionId"] ?: 0L
-//
-//    private var selectedCategoryType: CategoryType = CategoryType.EXPENSE
-//
-//
-//    // Holds the transaction for edit mode; null in create mode.
-//    private val _categories = MutableStateFlow<List<Category>>(listOf())
-//    val categories: List<Category> get() = _categories.value
-//
-//    init {
-//        loadTransaction()
-//        loadSelectedCategoryType()
-//    }
-//
-//
-//    private fun loadTransaction() {
-//        if (transactionId == 0L) {
-//            viewModelScope.launch {
-//                try {
-//                    combine(
-//                        getTransactionDetailsUseCase(transactionId),
-//                        getCategoriesUseCase(),
-//                    ) { transactionDetails, categories ->
-//                        _uiState.value = TransactionFormUiState.Success(
-//                            transaction = transactionDetails.transaction,
-//                            category = transactionDetails.category,
-//                            allCategories = categories
-//                        )
-//                    }
-//                    getCategoriesUseCase()
-//                        .collect { categories ->
-//                            _uiState.value = TransactionFormUiState.Create(
-//                                allCategories = categories
-//                            )
-//                        }
-//                } catch (e: Exception) {
-//                    _uiState.value = TransactionFormUiState.Error(
-//                        message = e.message ?: "Unknown error",
-//                    )
-//                }
-//
-//            } else {
-////                viewModelScope.launch {
-////                    try {
-////                        combine(
-////                            getTransactionDetailsUseCase(transactionId),
-////                            getCategoriesUseCase(),
-////                        ) { transactionDetails, categories ->
-////                            _uiState.value = TransactionFormUiState.Success(
-////                                transaction = transactionDetails.transaction,
-////                                category = transactionDetails.category,
-////                                allCategories = categories
-////                            )
-////                        }
-////                    } catch (e: Exception) {
-////                        _uiState.value = TransactionFormUiState.Error(
-////                            message = e.message ?: "Unknown error",
-////                        )
-////                    }
-//                }
-//            }
-//        }
-//    }
-//    private fun loadSelectedCategoryType() {
-////        _categories.value = uiState.value.let {
-////            if (it is TransactionFormUiState.Success) {
-////                it.allCategories.filter { category ->
-////                    category.type == selectedCategoryType
-////                }
-////            } else {
-////                emptyList()
-////            }
-////        }
-//    }
-//
-//    fun saveTransaction(updatedTransaction: Transaction, onResult: (Boolean) -> Unit) {
-//        viewModelScope.launch {
-//            try {
-//                upsertTransactionUseCase(updatedTransaction)
-//                Log.d("TransactionFormVM", "TransactionFormVM: saveTransaction Success?")
-//                // Reload details after update.
-//                loadTransaction()
-//                onResult(true)
-//            } catch (e: Exception) {
-//                Log.d("TransactionFormVM", "TransactionFormVM: saveTransaction Failed?")
-//                _uiState.value = TransactionFormUiState.Error(e.message ?: "Update failed")
-//                onResult(false)
-//            }
-//        }
-//    }
-//
-//    fun deleteTransaction(onResult: (Boolean) -> Unit) {
-//        viewModelScope.launch {
-//            try {
-//                deleteTransactionUseCase(transactionId)
-//                onResult(true)
-//                // TODO: signal success via an event or navigation callback.
-//            } catch (e: Exception) {
-//                _uiState.value = TransactionFormUiState.Error(e.message ?: "Delete failed")
-//                onResult(false)
-//            }
-//        }
-//    }
-//
-//    fun copyTransaction() {
-//        // Implement copy behavior.
-//    }
-//
-//    fun pickDateTime(current: LocalDateTime, onDateTimeSelected: (LocalDateTime) -> Unit) {
-//        // Trigger your date/time picker logic. For example, show a dialog.
-//        // For now, we'll just call the callback with a new value.
-//        onDateTimeSelected(current.plusHours(1))
-//    }
-//}
