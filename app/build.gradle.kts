@@ -7,6 +7,7 @@ plugins {
 //    id("com.google.gms.google-services")
     id("kotlin-parcelize")
     alias(libs.plugins.protobuf)
+    alias(libs.plugins.kotlin.serialization)
 
 }
 
@@ -81,7 +82,6 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.material.icons.core.android)
     implementation(libs.androidx.material.icons.extended.android)
-
 
     // ViewModel and LiveData integration with Compose
     implementation(libs.androidx.lifecycle.viewmodel.compose)
