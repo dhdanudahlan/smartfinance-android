@@ -60,6 +60,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -288,13 +290,17 @@ fun TransactionFormScreen(
                     onEvent(TransactionFormEvent.SetAmount(it))
                     isEditMode = true
                 },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
                     IconButton(onClick = { onEvent(TransactionFormEvent.SetAmount("")) }) {
                         Icon(Icons.Rounded.Delete, contentDescription = "Amount")
                     }
-                }
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                )
+
             )
 
             // Note Input Field.
@@ -311,7 +317,12 @@ fun TransactionFormScreen(
                     IconButton(onClick = { onEvent(TransactionFormEvent.SetNote("")) }) {
                         Icon(Icons.Rounded.Delete, contentDescription = "Amount")
                     }
-                }
+                },
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                    capitalization = KeyboardCapitalization.Sentences
+                )
             )
 
             Spacer(modifier = Modifier.height(24.dp))
