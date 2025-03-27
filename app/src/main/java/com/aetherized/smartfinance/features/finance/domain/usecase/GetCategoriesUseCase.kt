@@ -11,14 +11,12 @@ class GetCategoriesUseCase @Inject constructor(
     private val repository: FinanceRepository
 ) {
     operator fun invoke(
-        categoryType: CategoryType? = null,
-        limit: Int = 50,
-        offset: Int = 0
+        categoryType: CategoryType? = null
     ): Flow<List<Category>> {
         return if (categoryType != null) {
-            repository.getCategoriesByType(categoryType, limit, offset)
+            repository.getCategoriesByType(categoryType)
         } else {
-            repository.getActiveCategories(limit, offset)
+            repository.getActiveCategories()
         }
     }
 }
