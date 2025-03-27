@@ -1,6 +1,5 @@
 package com.aetherized.smartfinance.core.navigation.ext
 
-import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.aetherized.smartfinance.ui.Screen
@@ -10,14 +9,12 @@ fun NavController.navigateTo(
 ) {
     val currentRoute: String? = this.currentBackStackEntry?.destination?.route
 
-    val route = screen.routePath?.let { routePath ->
-        screen.route.replaceAfter("/", routePath)
-    } ?: screen.route
+    val route = screen.route
 
-    Log.d("navigation", "navigateTo: ${screen.route}")
+//    Log.d("navigation", "navigateTo: ${screen.route}")
 
     navigate(route) {
-        Log.d("navigation", "findStartDestination: ${graph.findStartDestination()}")
+//        Log.d("navigation", "findStartDestination: ${graph.findStartDestination()}")
 
         popUpTo(graph.findStartDestination().id) {
             saveState = true
@@ -25,9 +22,9 @@ fun NavController.navigateTo(
 
         launchSingleTop = true
 
-        restoreState = screen.restoreState
+        restoreState = true
 
-        if (screen.clearBackStack && !currentRoute.isNullOrEmpty()) {
+        if (!currentRoute.isNullOrEmpty()) {
             popUpTo(currentRoute) {
                 inclusive = true
             }
