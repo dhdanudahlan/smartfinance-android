@@ -21,7 +21,9 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 sealed interface TransactionFormEvent {
@@ -32,7 +34,8 @@ sealed interface TransactionFormEvent {
     object CopyTransaction : TransactionFormEvent
     data class SetCategoryType(val categoryType: CategoryType = CategoryType.EXPENSE) : TransactionFormEvent
     data class SetCategory(val category: Category) : TransactionFormEvent
-    data class SetDateTime(val dateTime: LocalDateTime) : TransactionFormEvent
+    data class SetDate(val localDate: LocalDate) : TransactionFormEvent
+    data class SetTime(val localTime: LocalTime) : TransactionFormEvent
     data class SetAmount(val amount: String) : TransactionFormEvent
     data class SetNote(val note: String) : TransactionFormEvent
     data class ValidateForm(val form: TransactionForm) : TransactionFormEvent
@@ -73,7 +76,8 @@ class TransactionFormViewModel @Inject constructor(
             is TransactionFormEvent.SetAmount -> setAmount(event.amount)
             is TransactionFormEvent.SetCategory -> setCategory(event.category)
             is TransactionFormEvent.SetCategoryType -> setCategoryType(event.categoryType)
-            is TransactionFormEvent.SetDateTime -> setDateTime(event.dateTime)
+            is TransactionFormEvent.SetDate -> setDate(event.localDate)
+            is TransactionFormEvent.SetTime -> setTime(event.localTime)
             is TransactionFormEvent.SetNote -> setNote(event.note)
             is TransactionFormEvent.ValidateForm -> validateForm(event.form)
         }
@@ -191,11 +195,24 @@ class TransactionFormViewModel @Inject constructor(
     }
 
     // Handle date and time change
-    private fun setDateTime(dateTime: LocalDateTime) {
+    private fun setDate(localDate: LocalDate) {
         _transactionFormUiState.update { currentState ->
             val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            val oldLocalTime = currentForm.transactionForm.dateTime.toLocalTime()
+            val newDateTime = LocalDateTime.of(localDate, oldLocalTime)
             TransactionFormUiState.Success(
-                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(dateTime = dateTime), isEditMode = true),
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(dateTime = newDateTime), isEditMode = true),
+                categories = currentState.categories
+            )
+        }
+    }
+    private fun setTime(localTime: LocalTime) {
+        _transactionFormUiState.update { currentState ->
+            val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
+            val oldLocalDate = currentForm.transactionForm.dateTime.toLocalDate()
+            val newDateTime = LocalDateTime.of(oldLocalDate, localTime)
+            TransactionFormUiState.Success(
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(dateTime = newDateTime), isEditMode = true),
                 categories = currentState.categories
             )
         }

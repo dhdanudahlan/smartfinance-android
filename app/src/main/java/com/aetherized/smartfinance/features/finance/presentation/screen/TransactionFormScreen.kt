@@ -1,5 +1,7 @@
 package com.aetherized.smartfinance.features.finance.presentation.screen
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
@@ -54,12 +56,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -68,6 +71,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.aetherized.smartfinance.R
 import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
 import com.aetherized.smartfinance.features.finance.presentation.FormState
@@ -77,6 +81,9 @@ import com.aetherized.smartfinance.features.finance.presentation.TransactionForm
 import com.aetherized.smartfinance.features.finance.presentation.TransactionFormViewModel
 import com.aetherized.smartfinance.ui.theme.SmartFinanceTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
@@ -115,16 +122,12 @@ fun TransactionFormScreen(
     navigateToPrevious: () -> Unit,
     onTransactionSaved: (TransactionForm) -> Unit
 ) {
-    // Determine mode.
-    var isEditMode by remember { mutableStateOf(transactionsFormUiState.formState.isEditMode) }
-
     // Screen title and button text.
-    val screenTitle = transactionsFormUiState.formState.transactionForm.categoryType.name
+    val screenTitle = stringResource(id = if(transactionsFormUiState.formState.transactionForm.categoryType == CategoryType.EXPENSE) R.string.expense else R.string.income)
 
     val filteredCategories by remember { mutableStateOf(transactionsFormUiState.categories) }
 
     // State for showing the category selection bottom sheet.
-    var showCategorySheet by remember { mutableStateOf(false) }
     val sheetState = rememberStandardBottomSheetState(
         skipHiddenState = false
     )
@@ -238,13 +241,13 @@ fun TransactionFormScreen(
                     filteredCategories.filter {
                         it.type == newType
                     }
+                    Log.d("TransactionFormScreen", "isEditMode: $transactionsFormUiState.formState.isEditMode")
                 },
-                onEditing = { isEditMode = true }
             )
             // Date & Time Input Field.
-            TransactionFormItem(
+            TransactionFormDateTimeItem(
                 label = "Date",
-                value = transactionsFormUiState.formState.transactionForm.dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+                value = transactionsFormUiState.formState.transactionForm.dateTime,
                 onValueChange = { /* Read-only */ },
                 readOnly = true,
                 modifier = Modifier
@@ -252,12 +255,14 @@ fun TransactionFormScreen(
                     .clickable {
 
                     },
+                onEvent = onEvent,
                 trailingIcon = {
                     IconButton(onClick = { /* Implement date/time picker */ }) {
                         Icon(Icons.Filled.DateRange, contentDescription = "Date and Time", tint = MaterialTheme.colorScheme.secondary)
                     }
                 }
             )
+
 
             // Category Selection Field.
             TransactionFormItem(
@@ -288,7 +293,6 @@ fun TransactionFormScreen(
                 value = transactionsFormUiState.formState.transactionForm.amount,
                 onValueChange = {
                     onEvent(TransactionFormEvent.SetAmount(it))
-                    isEditMode = true
                 },
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
@@ -309,7 +313,6 @@ fun TransactionFormScreen(
                 value = transactionsFormUiState.formState.transactionForm.note,
                 onValueChange = {
                     onEvent(TransactionFormEvent.SetNote(it))
-                    isEditMode = true
                 },
                 placeholder = { Text(text = "Optional", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
                 modifier = Modifier.fillMaxWidth(),
@@ -359,7 +362,7 @@ fun TransactionFormScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    if (!isEditMode) {
+                    if (!transactionsFormUiState.formState.isEditMode) {
                         Button(
                             onClick = {
                                 onEvent(TransactionFormEvent.DeleteTransaction)
@@ -491,14 +494,168 @@ fun TransactionFormItem(
         }
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TransactionFormDateTimeItem(
+    label: String,
+    modifier: Modifier = Modifier,
+    value: LocalDateTime,
+    onValueChange: (String) -> Unit,
+    onEvent: (TransactionFormEvent) -> Unit,
+    readOnly: Boolean = false,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    trailingIcon: @Composable (() -> Unit)? = null,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = label,
+                maxLines = 1,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+
+
+        val context = LocalContext.current
+
+        // Formatters for display (e.g., 3/28/25 (Fri), 4:13 AM)
+        val dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yy (E)")
+        val timeFormatter = DateTimeFormatter.ofPattern("h:mm a")  // 12-hour format with AM/PM
+
+        // Convert the current LocalDateTime into display strings
+        val dateString = remember(value) {
+            value.toLocalDate().format(dateFormatter)
+        }
+        val timeString = remember(value) {
+            value.toLocalTime().format(timeFormatter)
+        }
+
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val visualTransformation = VisualTransformation.None
+        val cursorBrush = SolidColor(Color.Black)
+        val textStyle = MaterialTheme.typography.bodySmall
+        Row(
+            modifier = Modifier.weight(3f),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            BasicTextField(
+                value = "",
+                onValueChange = onValueChange,
+                readOnly = readOnly,
+                modifier = modifier
+                    .fillMaxWidth(),
+                textStyle = textStyle,
+                keyboardOptions = keyboardOptions,
+                keyboardActions = keyboardActions,
+                visualTransformation = visualTransformation,
+                cursorBrush = cursorBrush,
+                interactionSource = interactionSource
+            ) { innerTextField ->
+                TextFieldDefaults.DecorationBox(
+                    value = "",
+                    visualTransformation = visualTransformation,
+                    innerTextField = innerTextField,
+                    enabled = true,
+                    singleLine = true,
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        focusedIndicatorColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedIndicatorColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        focusedTrailingIconColor = MaterialTheme.colorScheme.secondary,
+                        unfocusedTrailingIconColor = MaterialTheme.colorScheme.tertiaryContainer
+                    ),
+                    trailingIcon = trailingIcon,
+                    interactionSource = interactionSource,
+                    contentPadding = PaddingValues(vertical = 0.dp)
+                )
+                Row {
+                    Box(
+                        modifier = Modifier.weight(1f)
+                            .clickable (
+                                onClick = {
+                                    // Show the DatePickerDialog when date is clicked
+                                    val currentDate = value.toLocalDate()
+                                    val datePickerDialog = DatePickerDialog(
+                                        context,
+                                        { _, year, month, dayOfMonth ->
+                                            // month is zero-based in DatePickerDialog, hence (month + 1)
+                                            onEvent(TransactionFormEvent.SetDate(LocalDate.of(year, month + 1, dayOfMonth)))
+                                            //                                        onDateChange(LocalDate.of(year, month + 1, dayOfMonth))
+                                        },
+                                        currentDate.year,
+                                        currentDate.monthValue - 1,
+                                        currentDate.dayOfMonth
+                                    )
+                                    datePickerDialog.show()
+                                },
+                                interactionSource = remember { MutableInteractionSource() }, // This is mandatory
+                                indication = null
+                            )
+                    ) {
+                        Text(
+                            text = dateString,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier,
+                            maxLines = 1
+                        )
+                    }
+                    Box(
+                        modifier = Modifier.weight(2f)
+                            .clickable (
+                                onClick = {
+                                    // Show the TimePickerDialog when time is clicked
+                                    val currentTime = value.toLocalTime()
+                                    val timePickerDialog = TimePickerDialog(
+                                        context,
+                                        { _, hourOfDay, minute ->
+                                            onEvent(TransactionFormEvent.SetTime(LocalTime.of(hourOfDay, minute)))
+                                            //                                        onTimeChange(LocalTime.of(hourOfDay, minute))
+                                        },
+                                        currentTime.hour,
+                                        currentTime.minute,
+                                        false // is24HourView = false for 12-hour format
+                                    )
+                                    timePickerDialog.show()
+                                },
+                                interactionSource = remember { MutableInteractionSource() }, // This is mandatory
+                                indication = null
+                            )
+                    ) {
+                        Text(
+                            text = timeString,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier,
+                            maxLines = 1
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+}
 
 
 @Composable
 fun CategoryBottomSheetContent(
     filteredCategory: List<Category>,
     isCategorySheetSelected: () -> Unit,
-    onEvent: (TransactionFormEvent) -> Unit,
-    modifier: Modifier = Modifier
+    onEvent: (TransactionFormEvent) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -508,28 +665,9 @@ fun CategoryBottomSheetContent(
         verticalArrangement = Arrangement.Top,
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-//        item(span = { GridItemSpan(maxLineSpan) }) {
-//            CategoryBottomSheetHeaderItem()
-//        }
         items(filteredCategory, key = { it.id }) { category ->
             CategoryBottomSheetListItem(category = category, isCategorySheetSelected = isCategorySheetSelected, onEvent = onEvent)
         }
-    }
-}
-
-@Composable
-fun CategoryBottomSheetHeaderItem(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .padding(bottom = 16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Select Category", style = MaterialTheme.typography.titleLarge)
     }
 }
 @Composable
@@ -537,7 +675,6 @@ fun CategoryBottomSheetListItem(
     category: Category,
     isCategorySheetSelected: () -> Unit,
     onEvent: (TransactionFormEvent) -> Unit,
-    modifier: Modifier = Modifier
 ) {
 
     Card (
@@ -574,7 +711,6 @@ fun CategoryBottomSheetListItem(
 fun TransactionTypeSelector(
     selectedType: CategoryType,
     onTypeSelected: (CategoryType) -> Unit,
-    onEditing: () -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -586,7 +722,6 @@ fun TransactionTypeSelector(
                 onClick = {
                     Log.d("TransactionTypeSelector", "onTypeSelected: $selectedType")
                     onTypeSelected(CategoryType.INCOME)
-                    onEditing()
                 },
                 label = { Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { Text("Income") } },
                 colors = FilterChipDefaults.filterChipColors(
@@ -612,7 +747,6 @@ fun TransactionTypeSelector(
                 onClick = {
                     Log.d("TransactionTypeSelector", "onTypeSelected: $selectedType")
                     onTypeSelected(CategoryType.EXPENSE)
-                    onEditing()
                 },
                 label = { Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) { Text("Expense") } },
                 colors = FilterChipDefaults.filterChipColors(
