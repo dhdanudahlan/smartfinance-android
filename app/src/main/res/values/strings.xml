@@ -8,4 +8,7 @@
     <string name="feature_transactions_title">Transactions</string>
     <string name="feature_reports_title">Reports</string>
     <string name="feature_others_title">More</string>
+
+    <string name="expense">Expense</string>
+    <string name="income">Income</string>
 </resources>
