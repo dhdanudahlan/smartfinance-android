@@ -30,10 +30,12 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.Backspace
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -53,16 +55,22 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -133,7 +141,15 @@ fun TransactionFormScreen(
     )
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
 
+    val bottomSheetContentList = listOf("Category", "Amount")
+    var bottomSheetIndex by remember { mutableIntStateOf(0) }
+
     val scope = rememberCoroutineScope()
+
+    val focusRequester1 = remember { FocusRequester() }
+    val focusRequester2 = remember { FocusRequester() }
+    val focusRequester3 = remember { FocusRequester() }
+    val focusRequester4 = remember { FocusRequester() }
 
     // Filter categories based on selectedType.
 //    val filteredCategories = allCategories.filter { it.type == selectedType }
@@ -154,16 +170,27 @@ fun TransactionFormScreen(
         },
         scaffoldState = scaffoldState,
         sheetContent = {
-            val filteredCategory = transactionsFormUiState.categories.filter { it.type == transactionsFormUiState.formState.transactionForm.categoryType }
-            CategoryBottomSheetContent(
-                filteredCategory = filteredCategory,
-                isCategorySheetSelected = {
-                    scope.launch {
-                        scaffoldState.bottomSheetState.hide()
-                    }
-                },
-                onEvent = onEvent
-            )
+            when (bottomSheetIndex) {
+                0 -> {
+                    val filteredCategory = transactionsFormUiState.categories.filter { it.type == transactionsFormUiState.formState.transactionForm.categoryType }
+                    CategoryBottomSheetContent(
+                        filteredCategory = filteredCategory,
+                        isCategorySheetSelected = {
+//                            scope.launch {
+//                                scaffoldState.bottomSheetState.hide()
+//                            }
+                            focusRequester2.requestFocus()
+                        },
+                        onEvent = onEvent
+                    )
+                }
+                1 -> {
+                    NumericKeyboardBottomSheetContent(onEvent = onEvent, nextColumn = { focusRequester3.requestFocus() })
+                }
+                else -> {
+
+                }
+            }
         },
         sheetDragHandle = {
             Box(
@@ -219,178 +246,219 @@ fun TransactionFormScreen(
         },
         sheetShape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp),
         sheetSwipeEnabled = false,
-        sheetPeekHeight = 0.dp
+        sheetPeekHeight = 0.dp,
+        modifier = Modifier.fillMaxSize(),
     ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Top
         ) {
 
-            // Transaction Type Selector using FilterChips.
-            TransactionTypeSelector(
-                selectedType = transactionsFormUiState.formState.transactionForm.categoryType,
-                onTypeSelected = { newType ->
-                    onEvent(TransactionFormEvent.SetCategoryType(newType))
-                    scope.launch {
-                        scaffoldState.bottomSheetState.expand()
-                    }
-                    filteredCategories.filter {
-                        it.type == newType
-                    }
-                    Log.d("TransactionFormScreen", "isEditMode: $transactionsFormUiState.formState.isEditMode")
-                },
-            )
-            // Date & Time Input Field.
-            TransactionFormDateTimeItem(
-                label = "Date",
-                value = transactionsFormUiState.formState.transactionForm.dateTime,
-                onValueChange = { /* Read-only */ },
-                readOnly = true,
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
+                    .padding(8.dp),
+            ) {
 
-                    },
-                onEvent = onEvent,
-                trailingIcon = {
-                    IconButton(onClick = { /* Implement date/time picker */ }) {
-                        Icon(Icons.Filled.DateRange, contentDescription = "Date and Time", tint = MaterialTheme.colorScheme.secondary)
-                    }
-                }
-            )
-
-
-            // Category Selection Field.
-            TransactionFormItem(
-                label = "Category",
-                value = transactionsFormUiState.formState.transactionForm.category?.name,
-                onValueChange = { /* Read-only */ },
-                onFocused = {
-                    scope.launch {
-                        scaffoldState.bottomSheetState.expand()
-                    }
-                },
-                onUnfocused = {
-                    scope.launch {
-                        scaffoldState.bottomSheetState.hide()
-                    }
-                },
-                readOnly = true,
-                modifier = Modifier,
-                trailingIcon = {
-                    Icon(Icons.Rounded.Delete, contentDescription = "Amount", tint = Color.Transparent)
-                }
-            )
-
-
-            // Amount Input Field.
-            TransactionFormItem(
-                label = "Amount",
-                value = transactionsFormUiState.formState.transactionForm.amount,
-                onValueChange = {
-                    onEvent(TransactionFormEvent.SetAmount(it))
-                },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    IconButton(onClick = { onEvent(TransactionFormEvent.SetAmount("")) }) {
-                        Icon(Icons.Rounded.Delete, contentDescription = "Amount")
-                    }
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Next
-                )
-
-            )
-
-            // Note Input Field.
-            TransactionFormItem(
-                label = "Note",
-                value = transactionsFormUiState.formState.transactionForm.note,
-                onValueChange = {
-                    onEvent(TransactionFormEvent.SetNote(it))
-                },
-                placeholder = { Text(text = "Optional", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    IconButton(onClick = { onEvent(TransactionFormEvent.SetNote("")) }) {
-                        Icon(Icons.Rounded.Delete, contentDescription = "Amount")
-                    }
-                },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Done,
-                    capitalization = KeyboardCapitalization.Sentences
-                )
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Action Buttons.
-            if (transactionsFormUiState.formState.isNew) {
-                // Create Mode: "Save" and "Save & Continue" buttons.
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(16.dp)
                 ) {
-                    Button(
-                        onClick = {
-                            onEvent(TransactionFormEvent.SaveTransaction)
-                            onTransactionSaved(transactionsFormUiState.formState.transactionForm)
+
+                    // Transaction Type Selector using FilterChips.
+                    TransactionTypeSelector(
+                        selectedType = transactionsFormUiState.formState.transactionForm.categoryType,
+                        onTypeSelected = { newType ->
+                            onEvent(TransactionFormEvent.SetCategoryType(newType))
+                            focusRequester1.requestFocus()
+                            filteredCategories.filter {
+                                it.type == newType
+                            }
+                            Log.d("TransactionFormScreen", "isEditMode: $transactionsFormUiState.formState.isEditMode")
                         },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Save")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = {
-                            onEvent(TransactionFormEvent.ContinueTransaction)
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Continue")
-                    }
-                }
-            } else {
-                // Edit Mode: When not editing, show "Delete" and "Copy". Once editing, show "Save".
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    if (!transactionsFormUiState.formState.isEditMode) {
-                        Button(
-                            onClick = {
-                                onEvent(TransactionFormEvent.DeleteTransaction)
-                                onTransactionSaved(transactionsFormUiState.formState.transactionForm)
+                    )
+                    // Date & Time Input Field.
+                    TransactionFormDateTimeItem(
+                        label = "Date",
+                        value = transactionsFormUiState.formState.transactionForm.dateTime,
+                        onValueChange = { /* Read-only */ },
+                        readOnly = true,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+
                             },
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
-                        ) {
-                            Text("Delete")
+                        onEvent = onEvent,
+                        trailingIcon = {
+                            IconButton(onClick = { /* Implement date/time picker */ }) {
+                                Icon(Icons.Filled.DateRange, contentDescription = "Date and Time", tint = MaterialTheme.colorScheme.secondary)
+                            }
                         }
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Button(
-                            onClick = {
-                                onEvent(TransactionFormEvent.CopyTransaction)
-                            },
-                            modifier = Modifier.weight(1f)
+                    )
+
+
+                    // Category Selection Field.
+                    TransactionFormItem(
+                        label = "Category",
+                        focusRequester = focusRequester1,
+                        value = transactionsFormUiState.formState.transactionForm.category?.name,
+                        onValueChange = { /* Read-only */ },
+                        onFocused = {
+                            bottomSheetIndex = 0
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                        onUnfocused = {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.hide()
+                            }
+                        },
+                        readOnly = true,
+                        modifier = Modifier,
+                        trailingIcon = {
+                            Icon(Icons.Rounded.Close, contentDescription = "Amount", tint = Color.Transparent)
+                        }
+                    )
+
+
+                    // Amount Input Field.
+                    TransactionFormItem(
+                        label = "Amount",
+                        focusRequester = focusRequester2,
+                        value = transactionsFormUiState.formState.transactionForm.amount,
+                        onValueChange = {
+                            onEvent(TransactionFormEvent.SetAmount(it))
+                        },
+                        onFocused = {
+                            bottomSheetIndex = 1
+                            scope.launch {
+                                scaffoldState.bottomSheetState.expand()
+                            }
+                        },
+                        onUnfocused = {
+                            scope.launch {
+                                scaffoldState.bottomSheetState.hide()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            IconButton(onClick = { onEvent(TransactionFormEvent.SetAmount("")) }) {
+                                Icon(Icons.Rounded.Close, contentDescription = "Amount")
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        readOnly = true
+                    )
+
+                    // Note Input Field.
+                    TransactionFormItem(
+                        label = "Note",
+                        focusRequester = focusRequester3,
+                        value = transactionsFormUiState.formState.transactionForm.note,
+                        onValueChange = {
+                            onEvent(TransactionFormEvent.SetNote(it))
+                        },
+                        placeholder = { Text(text = "Optional", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            IconButton(onClick = { onEvent(TransactionFormEvent.SetNote("")) }) {
+                                Icon(Icons.Rounded.Close, contentDescription = "Amount")
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done,
+                            capitalization = KeyboardCapitalization.Sentences
+                        )
+                    )
+
+                }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.background)
+                        .padding(16.dp)
+                ) {
+                    // Action Buttons.
+                    if (transactionsFormUiState.formState.isNew) {
+                        // Create Mode: "Save" and "Save & Continue" buttons.
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            Text("Copy")
+                            Button(
+                                onClick = {
+                                    onEvent(TransactionFormEvent.SaveTransaction)
+                                    onTransactionSaved(transactionsFormUiState.formState.transactionForm)
+                                },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Save")
+                            }
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Button(
+                                onClick = {
+                                    onEvent(TransactionFormEvent.ContinueTransaction)
+                                },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Text("Continue")
+                            }
                         }
                     } else {
-                        Button(
-                            onClick = {
-                                onEvent(TransactionFormEvent.SaveTransaction)
-                                onTransactionSaved(transactionsFormUiState.formState.transactionForm)
-                            },
-                            modifier = Modifier.weight(1f)
+                        // Edit Mode: When not editing, show "Delete" and "Copy". Once editing, show "Save".
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            Text("Save")
+                            if (!transactionsFormUiState.formState.isEditMode) {
+                                Button(
+                                    onClick = {
+                                        onEvent(TransactionFormEvent.DeleteTransaction)
+                                        onTransactionSaved(transactionsFormUiState.formState.transactionForm)
+                                    },
+                                    modifier = Modifier.weight(1f),
+                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                                ) {
+                                    Text("Delete")
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Button(
+                                    onClick = {
+                                        onEvent(TransactionFormEvent.CopyTransaction)
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text("Copy")
+                                }
+                            } else {
+                                Button(
+                                    onClick = {
+                                        onEvent(TransactionFormEvent.SaveTransaction)
+                                        onTransactionSaved(transactionsFormUiState.formState.transactionForm)
+                                    },
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text("Save")
+                                }
+                            }
                         }
                     }
                 }
@@ -403,6 +471,7 @@ fun TransactionFormScreen(
 @Composable
 fun TransactionFormItem(
     label: String,
+    focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
     value: String?,
     onValueChange: (String) -> Unit,
@@ -457,7 +526,8 @@ fun TransactionFormItem(
                         } else {
                             onUnfocused()
                         }
-                    },
+                    }
+                    .focusRequester(focusRequester),
                 textStyle = textStyle,
                 keyboardOptions = keyboardOptions,
                 keyboardActions = keyboardActions,
@@ -563,11 +633,91 @@ fun TransactionFormDateTimeItem(
                 visualTransformation = visualTransformation,
                 cursorBrush = cursorBrush,
                 interactionSource = interactionSource
-            ) { innerTextField ->
+            ) { _ ->
+
                 TextFieldDefaults.DecorationBox(
                     value = "",
                     visualTransformation = visualTransformation,
-                    innerTextField = innerTextField,
+                    innerTextField = {
+                        Row {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clickable(
+                                        onClick = {
+                                            // Show the DatePickerDialog when date is clicked
+                                            val currentDate = value.toLocalDate()
+                                            val datePickerDialog = DatePickerDialog(
+                                                context,
+                                                { _, year, month, dayOfMonth ->
+                                                    // month is zero-based in DatePickerDialog, hence (month + 1)
+                                                    onEvent(
+                                                        TransactionFormEvent.SetDate(
+                                                            LocalDate.of(
+                                                                year,
+                                                                month + 1,
+                                                                dayOfMonth
+                                                            )
+                                                        )
+                                                    )
+                                                    //                                        onDateChange(LocalDate.of(year, month + 1, dayOfMonth))
+                                                },
+                                                currentDate.year,
+                                                currentDate.monthValue - 1,
+                                                currentDate.dayOfMonth
+                                            )
+                                            datePickerDialog.show()
+                                        },
+                                        interactionSource = remember { MutableInteractionSource() }, // This is mandatory
+                                        indication = null
+                                    )
+                            ) {
+                                Text(
+                                    text = dateString,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier,
+                                    maxLines = 1
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .weight(2f)
+                                    .clickable(
+                                        onClick = {
+                                            // Show the TimePickerDialog when time is clicked
+                                            val currentTime = value.toLocalTime()
+                                            val timePickerDialog = TimePickerDialog(
+                                                context,
+                                                { _, hourOfDay, minute ->
+                                                    onEvent(
+                                                        TransactionFormEvent.SetTime(
+                                                            LocalTime.of(
+                                                                hourOfDay,
+                                                                minute
+                                                            )
+                                                        )
+                                                    )
+                                                    //                                        onTimeChange(LocalTime.of(hourOfDay, minute))
+                                                },
+                                                currentTime.hour,
+                                                currentTime.minute,
+                                                false // is24HourView = false for 12-hour format
+                                            )
+                                            timePickerDialog.show()
+                                        },
+                                        interactionSource = remember { MutableInteractionSource() }, // This is mandatory
+                                        indication = null
+                                    )
+                            ) {
+                                Text(
+                                    text = timeString,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    modifier = Modifier,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                    },
                     enabled = true,
                     singleLine = true,
                     colors = TextFieldDefaults.colors(
@@ -583,68 +733,6 @@ fun TransactionFormDateTimeItem(
                     interactionSource = interactionSource,
                     contentPadding = PaddingValues(vertical = 0.dp)
                 )
-                Row {
-                    Box(
-                        modifier = Modifier.weight(1f)
-                            .clickable (
-                                onClick = {
-                                    // Show the DatePickerDialog when date is clicked
-                                    val currentDate = value.toLocalDate()
-                                    val datePickerDialog = DatePickerDialog(
-                                        context,
-                                        { _, year, month, dayOfMonth ->
-                                            // month is zero-based in DatePickerDialog, hence (month + 1)
-                                            onEvent(TransactionFormEvent.SetDate(LocalDate.of(year, month + 1, dayOfMonth)))
-                                            //                                        onDateChange(LocalDate.of(year, month + 1, dayOfMonth))
-                                        },
-                                        currentDate.year,
-                                        currentDate.monthValue - 1,
-                                        currentDate.dayOfMonth
-                                    )
-                                    datePickerDialog.show()
-                                },
-                                interactionSource = remember { MutableInteractionSource() }, // This is mandatory
-                                indication = null
-                            )
-                    ) {
-                        Text(
-                            text = dateString,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier,
-                            maxLines = 1
-                        )
-                    }
-                    Box(
-                        modifier = Modifier.weight(2f)
-                            .clickable (
-                                onClick = {
-                                    // Show the TimePickerDialog when time is clicked
-                                    val currentTime = value.toLocalTime()
-                                    val timePickerDialog = TimePickerDialog(
-                                        context,
-                                        { _, hourOfDay, minute ->
-                                            onEvent(TransactionFormEvent.SetTime(LocalTime.of(hourOfDay, minute)))
-                                            //                                        onTimeChange(LocalTime.of(hourOfDay, minute))
-                                        },
-                                        currentTime.hour,
-                                        currentTime.minute,
-                                        false // is24HourView = false for 12-hour format
-                                    )
-                                    timePickerDialog.show()
-                                },
-                                interactionSource = remember { MutableInteractionSource() }, // This is mandatory
-                                indication = null
-                            )
-                    ) {
-                        Text(
-                            text = timeString,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier,
-                            maxLines = 1
-                        )
-                    }
-                }
-
             }
         }
     }
@@ -703,6 +791,71 @@ fun CategoryBottomSheetListItem(
     }
 }
 
+@Composable
+fun NumericKeyboardBottomSheetContent(
+    onEvent: (TransactionFormEvent) -> Unit,
+    nextColumn: () -> Unit
+) {
+
+    val buttons = listOf(
+        "7", "8", "9", "<",
+        "4", "5", "6", "-",
+        "1", "2", "3", "C",
+        "", "0", "", "D"
+    )
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(4),
+        contentPadding = PaddingValues(4.dp), // Reduced padding
+        verticalArrangement = Arrangement.spacedBy(4.dp), // Reduced spacing
+        horizontalArrangement = Arrangement.spacedBy(4.dp), // Reduced spacing
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 240.dp, max = 240.dp)
+    ) {
+        items(buttons) { button ->
+            when (button) {
+                "<" ->
+                    NumericKeyboardBottomSheetKeyItem(char = button, onEvent = { onEvent(TransactionFormEvent.EraseAmountChar) }, icon = Icons.AutoMirrored.Rounded.Backspace)
+                "-" ->
+                    NumericKeyboardBottomSheetKeyItem(char = button, onEvent = { onEvent(TransactionFormEvent.ChangeAmountPosNev) })
+                "C" ->
+                    NumericKeyboardBottomSheetKeyItem(char = button, onEvent = { onEvent(TransactionFormEvent.SetAmount("")) })
+                in "1".."9", "0" ->
+                    NumericKeyboardBottomSheetKeyItem(char = button, onEvent = { onEvent(TransactionFormEvent.AddAmountChar(button)) })
+                "" ->
+                    Row {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
+                else ->
+                    NumericKeyboardBottomSheetKeyItem(char = button, onEvent = { nextColumn() }, icon = Icons.Rounded.Done)
+            }
+        }
+    }
+}
+@Composable
+fun NumericKeyboardBottomSheetKeyItem(
+    char: String,
+    icon: ImageVector? = null,
+    onEvent: () -> Unit,
+) {
+    Button(
+        onClick = onEvent,
+        contentPadding = PaddingValues(0.dp),
+        modifier = Modifier
+            .heightIn(min = 48.dp)
+            .fillMaxWidth(),
+        elevation = ButtonDefaults.buttonElevation(0.dp),
+        shape = RoundedCornerShape(0.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = if(char != "D") MaterialTheme.colorScheme.background else Color.Green, contentColor = MaterialTheme.colorScheme.onBackground)
+    ) {
+        if (icon != null) {
+            Icon(imageVector = icon, contentDescription = null)
+        } else {
+            Text(text = char, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        }
+    }
+}
 
 /**
  * A composable for selecting transaction type using Material3 FilterChips.

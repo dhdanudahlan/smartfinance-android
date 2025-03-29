@@ -39,6 +39,11 @@ sealed interface TransactionFormEvent {
     data class SetAmount(val amount: String) : TransactionFormEvent
     data class SetNote(val note: String) : TransactionFormEvent
     data class ValidateForm(val form: TransactionForm) : TransactionFormEvent
+    data class AddAmountChar(val key: String) : TransactionFormEvent
+    object EraseAmountChar : TransactionFormEvent
+    object ClearAmountChar : TransactionFormEvent
+    object ChangeAmountPosNev : TransactionFormEvent
+    object ChangeAmountRounding : TransactionFormEvent
 }
 @HiltViewModel
 class TransactionFormViewModel @Inject constructor(
@@ -51,6 +56,8 @@ class TransactionFormViewModel @Inject constructor(
 
     // Retrieve the transactionId from the SavedStateHandle
     private val transactionId: Long? = savedStateHandle["transactionId"]
+
+    private val amountText = MutableStateFlow("")
 
     private val _transactionFormUiState = MutableStateFlow<TransactionFormUiState>(TransactionFormUiState.Loading())
     val transactionFormUiState: StateFlow<TransactionFormUiState> = _transactionFormUiState.asStateFlow()
@@ -80,6 +87,48 @@ class TransactionFormViewModel @Inject constructor(
             is TransactionFormEvent.SetTime -> setTime(event.localTime)
             is TransactionFormEvent.SetNote -> setNote(event.note)
             is TransactionFormEvent.ValidateForm -> validateForm(event.form)
+            is TransactionFormEvent.AddAmountChar -> {
+                val numericCharSequence = "0123456789"
+                Log.d("TransactionFormViewModel", "value: ${event.key}")
+                Log.d("TransactionFormViewModel", "is numeric: ${numericCharSequence.contains(event.key)}")
+                if (numericCharSequence.contains(event.key)) {
+                    if (amountText.value == "0") {
+                        amountText.value = amountText.value.dropLast(1)
+                    }
+                    amountText.value += event.key
+                }
+                setAmount(amountText.value)
+            }
+            TransactionFormEvent.EraseAmountChar -> {
+                amountText.value = amountText.value.dropLast(1)
+                setAmount(amountText.value)
+            }
+            TransactionFormEvent.ClearAmountChar -> {
+                amountText.value = ""
+            }
+            TransactionFormEvent.ChangeAmountPosNev -> {
+                if (amountText.value.startsWith("-")){
+                    amountText.value = amountText.value.drop(1)
+                } else {
+                    amountText.value = "-" + amountText.value
+                }
+                setAmount(amountText.value)
+            }
+            TransactionFormEvent.ChangeAmountRounding -> {
+                if (!amountText.value.contains(".")){
+                    val numericCharSequence = "0123456789"
+                    if (amountText.value.isNotEmpty()){
+                        if (numericCharSequence.contains(amountText.value)) {
+                            amountText.value += "."
+                        }
+                    }
+                } else {
+                    if (amountText.value.endsWith(".")){
+                        amountText.value = amountText.value.dropLast(1)
+                    }
+                }
+                setAmount(amountText.value)
+            }
         }
     }
     private fun fetchCategories() {
@@ -220,6 +269,7 @@ class TransactionFormViewModel @Inject constructor(
 
     // Handle amount change
     private fun setAmount(amount: String) {
+        amountText.value = amount
         _transactionFormUiState.update { currentState ->
             val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
             val parsedAmount = amount.toDoubleOrNull()
@@ -285,6 +335,7 @@ class TransactionFormViewModel @Inject constructor(
             TransactionFormUiState.Success(
                 formState = FormState(
                     transactionForm = currentForm.transactionForm.copy(
+                        dateTime = currentForm.transactionForm.dateTime.plusSeconds(1),
                         amount = "",
                         note = "",
                         isDeleted = false
@@ -297,6 +348,7 @@ class TransactionFormViewModel @Inject constructor(
 
     // Save transaction to the repository
     private fun saveTransaction() {
+        Log.d("TransactionFormViewModel", "Saving transaction")
         val currentForm = (transactionFormUiState.value as? TransactionFormUiState.Success)?.formState ?: (transactionFormUiState.value as? TransactionFormUiState.Loading)?.formState ?: FormState()
 
         if (validateForm(currentForm.transactionForm)) {
@@ -309,11 +361,14 @@ class TransactionFormViewModel @Inject constructor(
                         amount = currentForm.transactionForm.amount.toDouble(),
                         note = currentForm.transactionForm.note,
                         timestamp = currentForm.transactionForm.dateTime,
-                        isDeleted = currentForm.transactionForm.isDeleted
+                        isDeleted = currentForm.transactionForm.isDeleted,
+
                     )
+                    upsertTransactionUseCase(transaction)
 
                 } catch (e: Exception) {
                     val errorMsg = e.message ?: "Failed to save transaction"
+                    Log.d("TransactionFormViewModel", "Saving transaction failed : $errorMsg")
                 }
             }
         }
