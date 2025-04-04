@@ -3,9 +3,9 @@ package com.aetherized.smartfinance.core.utils
 import com.aetherized.smartfinance.core.database.entity.AssetEntity
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.database.entity.TransactionEntity
+import com.aetherized.smartfinance.features.asset.domain.model.Asset
 import com.aetherized.smartfinance.features.finance.data.dto.CategoryDto
 import com.aetherized.smartfinance.features.finance.data.dto.TransactionDto
-import com.aetherized.smartfinance.features.finance.domain.model.Asset
 import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import java.text.NumberFormat
@@ -157,7 +157,9 @@ fun Asset.toEntity(): AssetEntity = AssetEntity(
     type = this.type,
     balance = this.balance,
     income = this.income,
-    expense = this.expense
+    expense = this.expense,
+    isDeleted = this.isDeleted,
+    lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 )
 
 fun AssetEntity.toDomainModel(): Asset = Asset(
@@ -166,7 +168,9 @@ fun AssetEntity.toDomainModel(): Asset = Asset(
     type = this.type,
     balance = this.balance,
     income = this.income,
-    expense = this.expense
+    expense = this.expense,
+    isDeleted = isDeleted,
+    lastModified = Instant.ofEpochMilli(lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()
 )
 
 
