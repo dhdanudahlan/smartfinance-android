@@ -7,7 +7,7 @@ data class Transaction(
     val categoryId: Long,
     val assetId: Long,
     val amount: Double,
-    val note: String? = null,
+    val label: String? = null,
     val description: String? = null,
     val timestamp: LocalDateTime = LocalDateTime.now(),
     val isDeleted: Boolean = false,

@@ -367,18 +367,18 @@ fun TransactionFormScreen(
                         readOnly = true
                     )
 
-                    // Note Input Field.
+                    // Label Input Field.
                     TransactionFormItem(
-                        label = "Note",
+                        label = "Label",
                         focusRequester = focusRequester3,
-                        value = transactionsFormUiState.formState.transactionForm.note,
+                        value = transactionsFormUiState.formState.transactionForm.label,
                         onValueChange = {
-                            onEvent(TransactionFormEvent.SetNote(it))
+                            onEvent(TransactionFormEvent.SetLabel(it))
                         },
                         placeholder = { Text(text = "Optional", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
                         modifier = Modifier.fillMaxWidth(),
                         trailingIcon = {
-                            IconButton(onClick = { onEvent(TransactionFormEvent.SetNote("")) }) {
+                            IconButton(onClick = { onEvent(TransactionFormEvent.SetLabel("")) }) {
                                 Icon(Icons.Rounded.Close, contentDescription = "Amount")
                             }
                         },
@@ -994,7 +994,7 @@ fun TransactionFormEditScreenLightPreview() {
                 transactionForm = TransactionForm(
                     category = Category(id = 1, name = "Category Expense 1", type = CategoryType.EXPENSE),
                     amount = 100.toDouble().toString(),
-                    note = "Sample Note"
+                    label = "Sample Label"
                 )
             )
         )
@@ -1018,7 +1018,7 @@ fun TransactionFormEditScreenDarkPreview() {
                 transactionForm = TransactionForm(
                     category = Category(id = 1, name = "Category Expense 1", type = CategoryType.EXPENSE),
                     amount = 100.toDouble().toString(),
-                    note = "Sample Note"
+                    label = "Sample Label"
                 )
             )
         )

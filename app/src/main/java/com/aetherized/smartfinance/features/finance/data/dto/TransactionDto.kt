@@ -7,7 +7,7 @@ data class TransactionDto(
     val categoryId: Long,
     val assetId: Long,
     val amount: Double,
-    val note: String? = null,
+    val label: String? = null,
     val description: String? = null,
     val timestamp: String = LocalDateTime.now().toString(),
     val isDeleted: Boolean = false,

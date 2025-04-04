@@ -668,9 +668,9 @@ fun SmartFinanceTransactionsItem(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                if (transaction.note != null) {
+                if (transaction.label != null) {
                     Text(
-                        text = transaction.note,
+                        text = transaction.label,
                         maxLines = 1,
                         fontSize = 11.sp
                     )
@@ -734,7 +734,7 @@ fun TransactionsScreenPreview() {
             categoryId = categories[0].id,
             assetId = 1,
             amount = 60000.toDouble(),
-            note = "Transaction of ${LocalDateTime.now().plusMinutes(1).minute}",
+            label = "Transaction of ${LocalDateTime.now().plusMinutes(1).minute}",
             timestamp = LocalDateTime.now().plusMinutes(1)
         ),
         Transaction(
@@ -747,14 +747,14 @@ fun TransactionsScreenPreview() {
             categoryId = categories[1].id,
             assetId = 1,
             amount = 5000.toDouble(),
-            note = "Transaction of ${LocalDateTime.now().plusMinutes(3).minute}",
+            label = "Transaction of ${LocalDateTime.now().plusMinutes(3).minute}",
             timestamp = LocalDateTime.now().plusMinutes(3)
         ),
         Transaction(
             categoryId = categories[0].id,
             assetId = 1,
             amount = 1000.toDouble(),
-            note = "Transaction of ${LocalDateTime.now().minusDays(2).plusMinutes(3).minute}",
+            label = "Transaction of ${LocalDateTime.now().minusDays(2).plusMinutes(3).minute}",
             timestamp = LocalDateTime.now().minusDays(2).plusMinutes(3)
         ),
         Transaction(
@@ -767,7 +767,7 @@ fun TransactionsScreenPreview() {
             categoryId = categories[1].id,
             assetId = 1,
             amount = 5000.toDouble(),
-            note = "Transaction of ${LocalDateTime.now().minusDays(2).plusMinutes(1).minute}",
+            label = "Transaction of ${LocalDateTime.now().minusDays(2).plusMinutes(1).minute}",
             timestamp = LocalDateTime.now().minusDays(2).plusMinutes(1)
         )
     )
@@ -839,7 +839,7 @@ private fun SmartFinanceTransactionsCardPreview() {
             categoryId = categories[0].id,
             assetId = 1,
             amount = 6000000.toDouble(),
-            note = "Transaction of 6000000"
+            label = "Transaction of 6000000"
         ),
         Transaction(
             categoryId = categories[1].id,
@@ -850,7 +850,7 @@ private fun SmartFinanceTransactionsCardPreview() {
             categoryId = categories[1].id,
             assetId = 1,
             amount = 5000.toDouble(),
-            note = "Transaction of 5000"
+            label = "Transaction of 5000"
         )
     )
     val localDateTime = LocalDateTime.now()
