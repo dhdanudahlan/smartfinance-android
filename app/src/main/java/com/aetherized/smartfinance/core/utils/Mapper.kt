@@ -1,11 +1,11 @@
 package com.aetherized.smartfinance.core.utils
 
-import com.aetherized.smartfinance.core.database.entity.AccountEntity
+import com.aetherized.smartfinance.core.database.entity.AssetEntity
 import com.aetherized.smartfinance.core.database.entity.CategoryEntity
 import com.aetherized.smartfinance.core.database.entity.TransactionEntity
 import com.aetherized.smartfinance.features.finance.data.dto.CategoryDto
 import com.aetherized.smartfinance.features.finance.data.dto.TransactionDto
-import com.aetherized.smartfinance.features.finance.domain.model.Account
+import com.aetherized.smartfinance.features.finance.domain.model.Asset
 import com.aetherized.smartfinance.features.finance.domain.model.Category
 import com.aetherized.smartfinance.features.finance.domain.model.Transaction
 import java.text.NumberFormat
@@ -23,7 +23,7 @@ fun Transaction.toEntity(): TransactionEntity {
         id = if (this.isNew) 0L else this.id,
         categoryId = this.categoryId,
         amount = this.amount,
-        accountId = this.accountId,
+        assetId = this.assetId,
         note = this.note,
         description = this.description,
         timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
@@ -36,7 +36,7 @@ fun Transaction.toDto(): TransactionDto {
     return TransactionDto(
         id = this.id,
         categoryId = this.categoryId,
-        accountId = this.accountId,
+        assetId = this.assetId,
         amount = this.amount,
         note = this.note,
         description = this.description,
@@ -51,7 +51,7 @@ fun TransactionDto.toDomainModel(): Transaction {
     return Transaction(
         id = this.id,
         categoryId = this.categoryId,
-        accountId = this.accountId,
+        assetId = this.assetId,
         amount = this.amount,
         note = this.note,
         description = this.description,
@@ -65,7 +65,7 @@ fun TransactionEntity.toDomainModel(): Transaction {
     return Transaction(
         id = this.id,
         categoryId = this.categoryId,
-        accountId = this.accountId,
+        assetId = this.assetId,
         amount = this.amount,
         note = this.note,
         description = this.description,
@@ -149,9 +149,9 @@ fun CategoryDto.toDomainModel(): Category {
 
 
 /** -------------------------
-Account
+Asset
 ----------------------------*/
-fun Account.toEntity(): AccountEntity = AccountEntity(
+fun Asset.toEntity(): AssetEntity = AssetEntity(
     id = this.id,
     name = this.name,
     type = this.type,
@@ -160,7 +160,7 @@ fun Account.toEntity(): AccountEntity = AccountEntity(
     expense = this.expense
 )
 
-fun AccountEntity.toDomainModel(): Account = Account(
+fun AssetEntity.toDomainModel(): Asset = Asset(
     id = this.id,
     name = this.name,
     type = this.type,

@@ -389,7 +389,7 @@ class TransactionFormViewModel @Inject constructor(
                     val transaction = Transaction(
                         id = transactionId ?: 0L, // Use transactionId if available
                         categoryId = currentForm.transactionForm.category!!.id,
-                        accountId = 1L, // Replace with actual account ID
+                        assetId = 1L, // Replace with actual account ID
                         amount = currentForm.transactionForm.amount.toDouble(),
                         note = currentForm.transactionForm.note,
                         description = currentForm.transactionForm.description,

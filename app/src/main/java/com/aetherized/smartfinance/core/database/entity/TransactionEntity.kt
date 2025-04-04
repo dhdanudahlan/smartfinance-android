@@ -30,7 +30,7 @@ data class TransactionEntity(
     @ColumnInfo(defaultValue = "0")
     val categoryId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
     @ColumnInfo(defaultValue = "0")
-    val accountId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
+    val assetId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
     val amount: Double,
     val note: String? = null,
     val description: String? = null,

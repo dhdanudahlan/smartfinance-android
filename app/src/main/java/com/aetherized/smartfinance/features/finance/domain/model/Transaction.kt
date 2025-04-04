@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 data class Transaction(
     val id: Long = 0L,
     val categoryId: Long,
-    val accountId: Long,
+    val assetId: Long,
     val amount: Double,
     val note: String? = null,
     val description: String? = null,
