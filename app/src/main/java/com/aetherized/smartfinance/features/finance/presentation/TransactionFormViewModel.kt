@@ -38,7 +38,7 @@ sealed interface TransactionFormEvent {
     data class SetTime(val localTime: LocalTime) : TransactionFormEvent
     data class SetAmount(val amount: String) : TransactionFormEvent
     data class SetLabel(val label: String) : TransactionFormEvent
-    data class SetDescription(val description: String) : TransactionFormEvent
+    data class SetNote(val note: String) : TransactionFormEvent
     data class ValidateForm(val form: TransactionForm) : TransactionFormEvent
     data class AddAmountChar(val key: String) : TransactionFormEvent
     object EraseAmountChar : TransactionFormEvent
@@ -85,7 +85,7 @@ class TransactionFormViewModel @Inject constructor(
             is TransactionFormEvent.SetDate -> setDate(event.localDate)
             is TransactionFormEvent.SetTime -> setTime(event.localTime)
             is TransactionFormEvent.SetLabel -> setLabel(event.label)
-            is TransactionFormEvent.SetDescription -> setDescription(event.description)
+            is TransactionFormEvent.SetNote -> setNote(event.note)
             is TransactionFormEvent.ValidateForm -> validateForm(event.form)
             is TransactionFormEvent.AddAmountChar -> {
                 val numericCharSequence = "0123456789"
@@ -191,7 +191,7 @@ class TransactionFormViewModel @Inject constructor(
                             dateTime = transactionDetails.transaction.timestamp,
                             amount = transactionDetails.transaction.amount.toInt().toString(),
                             label = transactionDetails.transaction.label.orEmpty(),
-                            description = transactionDetails.transaction.description.orEmpty(),
+                            note = transactionDetails.transaction.note.orEmpty(),
                         ),
                         formState = FormState(
                             transactionForm = TransactionForm(
@@ -200,7 +200,7 @@ class TransactionFormViewModel @Inject constructor(
                                 dateTime = transactionDetails.transaction.timestamp,
                                 amount = transactionDetails.transaction.amount.toInt().toString(),
                                 label = transactionDetails.transaction.label.orEmpty(),
-                                description = transactionDetails.transaction.description.orEmpty(),
+                                note = transactionDetails.transaction.note.orEmpty(),
                             ),
                             isNew = false,
                         ),
@@ -302,11 +302,11 @@ class TransactionFormViewModel @Inject constructor(
     }
 
     // Handle note change
-    private fun setDescription(description: String) {
+    private fun setNote(note: String) {
         _transactionFormUiState.update { currentState ->
             val currentForm = (currentState as? TransactionFormUiState.Success)?.formState ?: (currentState as? TransactionFormUiState.Loading)?.formState ?: FormState()
             TransactionFormUiState.Success(
-                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(description = description), isEditMode = true),
+                formState = currentForm.copy(transactionForm = currentForm.transactionForm.copy(note = note), isEditMode = true),
                 categories = currentState.categories
             )
         }
@@ -322,7 +322,7 @@ class TransactionFormViewModel @Inject constructor(
                     dateTime = currentForm.transactionForm.dateTime,
                     amount = currentForm.transactionForm.amount,
                     label = currentForm.transactionForm.label,
-                    description = currentForm.transactionForm.description,
+                    note = currentForm.transactionForm.note,
                     isDeleted = currentForm.transactionForm.isDeleted
                 )
             TransactionFormUiState.Success(
@@ -333,7 +333,7 @@ class TransactionFormViewModel @Inject constructor(
                         dateTime = originalData.dateTime,
                         amount = originalData.amount,
                         label = originalData.label,
-                        description = originalData.description,
+                        note = originalData.note,
                         isDeleted = true
                     )
                 ),
@@ -353,7 +353,7 @@ class TransactionFormViewModel @Inject constructor(
                         dateTime = currentForm.transactionForm.dateTime.plusSeconds(1),
                         amount = "",
                         label = "",
-                        description = "",
+                        note = "",
                         isDeleted = false
                     )
                 ),
@@ -392,7 +392,7 @@ class TransactionFormViewModel @Inject constructor(
                         assetId = 1L, // Replace with actual account ID
                         amount = currentForm.transactionForm.amount.toDouble(),
                         label = currentForm.transactionForm.label,
-                        description = currentForm.transactionForm.description,
+                        note = currentForm.transactionForm.note,
                         timestamp = currentForm.transactionForm.dateTime,
                         isDeleted = currentForm.transactionForm.isDeleted,
 

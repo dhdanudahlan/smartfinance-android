@@ -25,7 +25,7 @@ fun Transaction.toEntity(): TransactionEntity {
         amount = this.amount,
         assetId = this.assetId,
         label = this.label,
-        description = this.description,
+        note = this.note,
         timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
         isDeleted = this.isDeleted,
         lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -39,7 +39,7 @@ fun Transaction.toDto(): TransactionDto {
         assetId = this.assetId,
         amount = this.amount,
         label = this.label,
-        description = this.description,
+        note = this.note,
         timestamp = this.timestamp.toString(),
         isDeleted = this.isDeleted,
         lastModified = this.lastModified.toString()
@@ -54,7 +54,7 @@ fun TransactionDto.toDomainModel(): Transaction {
         assetId = this.assetId,
         amount = this.amount,
         label = this.label,
-        description = this.description,
+        note = this.note,
         timestamp = LocalDateTime.parse(this.timestamp),
         isDeleted = this.isDeleted,
         lastModified = LocalDateTime.parse(this.lastModified)
@@ -68,7 +68,7 @@ fun TransactionEntity.toDomainModel(): Transaction {
         assetId = this.assetId,
         amount = this.amount,
         label = this.label,
-        description = this.description,
+        note = this.note,
         timestamp = Instant.ofEpochMilli(this.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime(),
         isDeleted = this.isDeleted,
         lastModified = Instant.ofEpochMilli(this.lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()

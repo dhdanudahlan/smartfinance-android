@@ -330,7 +330,7 @@ fun TransactionFormScreen(
                         readOnly = true,
                         modifier = Modifier,
                         trailingIcon = {
-                            Icon(Icons.Rounded.Close, contentDescription = "Amount", tint = Color.Transparent)
+                            Icon(Icons.Rounded.Close, contentDescription = "Delete", tint = Color.Transparent)
                         }
                     )
 
@@ -357,7 +357,7 @@ fun TransactionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         trailingIcon = {
                             IconButton(onClick = { onEvent(TransactionFormEvent.SetAmount("")) }) {
-                                Icon(Icons.Rounded.Close, contentDescription = "Amount")
+                                Icon(Icons.Rounded.Close, contentDescription = "Delete")
                             }
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -379,7 +379,7 @@ fun TransactionFormScreen(
                         modifier = Modifier.fillMaxWidth(),
                         trailingIcon = {
                             IconButton(onClick = { onEvent(TransactionFormEvent.SetLabel("")) }) {
-                                Icon(Icons.Rounded.Close, contentDescription = "Amount")
+                                Icon(Icons.Rounded.Close, contentDescription = "Delete")
                             }
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(
@@ -405,18 +405,18 @@ fun TransactionFormScreen(
                         .padding(16.dp)
                 ) {
 
-                    // Description Input Field.
+                    // Note Input Field.
                     TransactionFormItem(
                         focusRequester = focusRequester4,
-                        value = transactionsFormUiState.formState.transactionForm.description,
+                        value = transactionsFormUiState.formState.transactionForm.note,
                         onValueChange = {
-                            onEvent(TransactionFormEvent.SetDescription(it))
+                            onEvent(TransactionFormEvent.SetNote(it))
                         },
-                        placeholder = { Text(text = "Description", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
+                        placeholder = { Text(text = "Note", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
                         modifier = Modifier.fillMaxWidth(),
                         trailingIcon = {
-                            IconButton(onClick = { onEvent(TransactionFormEvent.SetDescription("")) }) {
-                                Icon(Icons.Rounded.Close, contentDescription = "Amount")
+                            IconButton(onClick = { onEvent(TransactionFormEvent.SetNote("")) }) {
+                                Icon(Icons.Rounded.Close, contentDescription = "Delete")
                             }
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(

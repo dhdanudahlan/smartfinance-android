@@ -33,7 +33,7 @@ data class TransactionEntity(
     val assetId: Long, // Must reference an existing category or a default one (e.g., Uncategorized)
     val amount: Double,
     val label: String? = null,
-    val description: String? = null,
+    val note: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "is_deleted")
     val isDeleted: Boolean = false,
