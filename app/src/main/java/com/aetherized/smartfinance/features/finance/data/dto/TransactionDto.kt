@@ -8,6 +8,7 @@ data class TransactionDto(
     val accountId: Long,
     val amount: Double,
     val note: String? = null,
+    val description: String? = null,
     val timestamp: String = LocalDateTime.now().toString(),
     val isDeleted: Boolean = false,
     val lastModified: String = LocalDateTime.now().toString()

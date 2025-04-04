@@ -25,6 +25,7 @@ fun Transaction.toEntity(): TransactionEntity {
         amount = this.amount,
         accountId = this.accountId,
         note = this.note,
+        description = this.description,
         timestamp = this.timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
         isDeleted = this.isDeleted,
         lastModified = this.lastModified.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -38,6 +39,7 @@ fun Transaction.toDto(): TransactionDto {
         accountId = this.accountId,
         amount = this.amount,
         note = this.note,
+        description = this.description,
         timestamp = this.timestamp.toString(),
         isDeleted = this.isDeleted,
         lastModified = this.lastModified.toString()
@@ -52,6 +54,7 @@ fun TransactionDto.toDomainModel(): Transaction {
         accountId = this.accountId,
         amount = this.amount,
         note = this.note,
+        description = this.description,
         timestamp = LocalDateTime.parse(this.timestamp),
         isDeleted = this.isDeleted,
         lastModified = LocalDateTime.parse(this.lastModified)
@@ -65,6 +68,7 @@ fun TransactionEntity.toDomainModel(): Transaction {
         accountId = this.accountId,
         amount = this.amount,
         note = this.note,
+        description = this.description,
         timestamp = Instant.ofEpochMilli(this.timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime(),
         isDeleted = this.isDeleted,
         lastModified = Instant.ofEpochMilli(this.lastModified).atZone(ZoneId.systemDefault()).toLocalDateTime()

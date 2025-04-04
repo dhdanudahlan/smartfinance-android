@@ -146,6 +146,7 @@ fun TransactionFormScreen(
 
     val scope = rememberCoroutineScope()
 
+    val focusRequester0 = remember { FocusRequester() }
     val focusRequester1 = remember { FocusRequester() }
     val focusRequester2 = remember { FocusRequester() }
     val focusRequester3 = remember { FocusRequester() }
@@ -230,8 +231,10 @@ fun TransactionFormScreen(
                     }
                     IconButton(
                         onClick = {
-                            scope.launch {
-                                scaffoldState.bottomSheetState.hide()
+                            if (transactionsFormUiState.formState.transactionForm.category != null) {
+                                scope.launch {
+                                    scaffoldState.bottomSheetState.hide()
+                                }
                             }
                         }
                     ) {
@@ -247,7 +250,9 @@ fun TransactionFormScreen(
         sheetShape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp),
         sheetSwipeEnabled = false,
         sheetPeekHeight = 0.dp,
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .focusRequester(focusRequester0),
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -275,10 +280,13 @@ fun TransactionFormScreen(
                         selectedType = transactionsFormUiState.formState.transactionForm.categoryType,
                         onTypeSelected = { newType ->
                             onEvent(TransactionFormEvent.SetCategoryType(newType))
+                            focusRequester0.requestFocus()
                             focusRequester1.requestFocus()
+//                            focusRequester1.captureFocus()
                             filteredCategories.filter {
                                 it.type == newType
                             }
+                            onEvent(TransactionFormEvent.SetCategory(filteredCategories.firstOrNull()))
                             Log.d("TransactionFormScreen", "isEditMode: $transactionsFormUiState.formState.isEditMode")
                         },
                     )
@@ -392,10 +400,31 @@ fun TransactionFormScreen(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .background(color = MaterialTheme.colorScheme.background)
                         .padding(16.dp)
                 ) {
+
+                    // Description Input Field.
+                    TransactionFormItem(
+                        focusRequester = focusRequester4,
+                        value = transactionsFormUiState.formState.transactionForm.description,
+                        onValueChange = {
+                            onEvent(TransactionFormEvent.SetDescription(it))
+                        },
+                        placeholder = { Text(text = "Description", style = MaterialTheme.typography.bodySmall, color = Color.LightGray) },
+                        modifier = Modifier.fillMaxWidth(),
+                        trailingIcon = {
+                            IconButton(onClick = { onEvent(TransactionFormEvent.SetDescription("")) }) {
+                                Icon(Icons.Rounded.Close, contentDescription = "Amount")
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done,
+                            capitalization = KeyboardCapitalization.Sentences
+                        )
+                    )
                     // Action Buttons.
                     if (transactionsFormUiState.formState.isNew) {
                         // Create Mode: "Save" and "Save & Continue" buttons.
@@ -439,15 +468,15 @@ fun TransactionFormScreen(
                                 ) {
                                     Text("Delete")
                                 }
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Button(
-                                    onClick = {
-                                        onEvent(TransactionFormEvent.CopyTransaction)
-                                    },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Copy")
-                                }
+//                                Spacer(modifier = Modifier.width(8.dp))
+//                                Button(
+//                                    onClick = {
+//                                        onEvent(TransactionFormEvent.CopyTransaction)
+//                                    },
+//                                    modifier = Modifier.weight(1f)
+//                                ) {
+//                                    Text("Copy")
+//                                }
                             } else {
                                 Button(
                                     onClick = {
@@ -470,9 +499,9 @@ fun TransactionFormScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionFormItem(
-    label: String,
-    focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
+    label: String? = null,
+    focusRequester: FocusRequester,
     value: String?,
     onValueChange: (String) -> Unit,
     onFocused: () -> Unit = {},
@@ -493,17 +522,19 @@ fun TransactionFormItem(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = label,
-                maxLines = 1,
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.secondary,
-            )
+        if (label != null) {
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = label,
+                    maxLines = 1,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+            }
         }
         val interactionSource = remember { MutableInteractionSource() }
         val visualTransformation = VisualTransformation.None

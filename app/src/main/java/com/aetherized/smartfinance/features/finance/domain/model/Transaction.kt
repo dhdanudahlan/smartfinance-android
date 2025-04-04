@@ -8,6 +8,7 @@ data class Transaction(
     val accountId: Long,
     val amount: Double,
     val note: String? = null,
+    val description: String? = null,
     val timestamp: LocalDateTime = LocalDateTime.now(),
     val isDeleted: Boolean = false,
     val lastModified: LocalDateTime = LocalDateTime.now(),
