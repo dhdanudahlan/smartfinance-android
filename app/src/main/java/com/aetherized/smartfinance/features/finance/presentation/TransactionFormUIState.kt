@@ -17,7 +17,7 @@ data class TransactionForm(
     val dateTime: LocalDateTime = LocalDateTime.now(), // Selected date and time
     val amount: String = "", // Amount entered by the user
     val label: String = "", // Label entered by the user
-    val description: String = "", // Note entered by the user
+    val note: String = "", // Note entered by the user
     val isDeleted: Boolean = false, // Indicates if the transaction is deleted
 )
 data class TransactionData(
@@ -26,7 +26,7 @@ data class TransactionData(
     val dateTime: LocalDateTime = LocalDateTime.now(), // Selected date and time
     val amount: String = "", // Amount entered by the user
     val label: String = "", // Label  entered by the user
-    val description: String = "", // Note entered by the user
+    val note: String = "", // Note entered by the user
     val isDeleted: Boolean = false, // Indicates if the transaction is deleted
 )
 sealed class TransactionFormUiState {
