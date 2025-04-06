@@ -1,6 +1,5 @@
 package com.aetherized.smartfinance.core.navigation.screen
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavGraphBuilder
@@ -9,11 +8,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.aetherized.smartfinance.core.navigation.ext.navigateTo
 import com.aetherized.smartfinance.core.navigation.graph.HomeNavGraph
-import com.aetherized.smartfinance.features.home.presentation.HomeScreen
-import com.aetherized.smartfinance.ui.Screen
-import com.aetherized.smartfinance.ui.TransactionsScreen
-import com.aetherized.smartfinance.ui.component.HomeBottomNavigation
-import com.aetherized.smartfinance.ui.navigationRouteHome
+import com.aetherized.smartfinance.features.home.screen.HomeScreen
+import com.aetherized.smartfinance.features.main.ui.Screen
+import com.aetherized.smartfinance.features.main.ui.TransactionsScreen
+import com.aetherized.smartfinance.features.main.ui.component.HomeBottomNavigation
+import com.aetherized.smartfinance.features.main.ui.navigationRouteHome
 
 fun NavGraphBuilder.homeScreenNav(onNavigateToRoot: (Screen) -> Unit) {
     composable(

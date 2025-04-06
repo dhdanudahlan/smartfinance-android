@@ -12,10 +12,10 @@ import androidx.navigation.navigation
 import com.aetherized.smartfinance.core.navigation.screen.accountsScreen
 import com.aetherized.smartfinance.core.navigation.screen.othersScreen
 import com.aetherized.smartfinance.core.navigation.screen.reportsScreen
-import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionFormScreenContainer
-import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionsScreenContainer
-import com.aetherized.smartfinance.ui.Screen
-import com.aetherized.smartfinance.ui.TransactionsScreen
+import com.aetherized.smartfinance.features.transactions.screen.TransactionFormScreenContainer
+import com.aetherized.smartfinance.features.transactions.screen.TransactionsScreenContainer
+import com.aetherized.smartfinance.features.main.ui.Screen
+import com.aetherized.smartfinance.features.main.ui.TransactionsScreen
 
 @Composable
 fun HomeNavGraph(

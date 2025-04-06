@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
-import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
-import com.aetherized.smartfinance.core.utils.Converters
+import com.aetherized.smartfinance.core.database.model.CategoryEntity
+import com.aetherized.smartfinance.core.database.model.TransactionEntity
+import com.aetherized.smartfinance.core.database.util.Converters
 
 @Database(
     entities = [CategoryEntity::class, TransactionEntity::class],

@@ -1,26 +1,6 @@
 package com.aetherized.smartfinance.data.local.dao
 
-import android.content.Context
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
-import com.aetherized.smartfinance.core.database.dao.CategoryDao
-import com.aetherized.smartfinance.core.database.dao.TransactionDao
-import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
-import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
-import com.aetherized.smartfinance.features.finance.domain.model.Transaction
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)

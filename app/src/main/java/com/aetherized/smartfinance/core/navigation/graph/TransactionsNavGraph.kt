@@ -7,10 +7,10 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionFormScreenContainer
-import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionsScreenContainer
-import com.aetherized.smartfinance.ui.Screen
-import com.aetherized.smartfinance.ui.TransactionsScreen
+import com.aetherized.smartfinance.features.transactions.screen.TransactionFormScreenContainer
+import com.aetherized.smartfinance.features.transactions.screen.TransactionsScreenContainer
+import com.aetherized.smartfinance.features.main.ui.Screen
+import com.aetherized.smartfinance.features.main.ui.TransactionsScreen
 
 @Composable
 fun TransactionsNavGraph(

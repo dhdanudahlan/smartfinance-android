@@ -1,8 +1,6 @@
 package com.aetherized.smartfinance.core.utils
 
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
-import java.text.NumberFormat
-import java.util.Locale
+import com.aetherized.smartfinance.core.database.model.TransactionEntity
 
 class TransactionValidator {
     companion object {

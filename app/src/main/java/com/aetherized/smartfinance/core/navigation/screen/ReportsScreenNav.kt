@@ -3,7 +3,7 @@ package com.aetherized.smartfinance.core.navigation.screen
 import android.util.Log
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.features.main.ui.Screen
 
 fun NavGraphBuilder.reportsScreen() {
     composable(

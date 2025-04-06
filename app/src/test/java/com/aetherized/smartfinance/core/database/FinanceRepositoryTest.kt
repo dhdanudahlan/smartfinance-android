@@ -6,10 +6,10 @@ import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
 import com.aetherized.smartfinance.core.remote.RemoteDataSource
 import com.aetherized.smartfinance.core.remote.RemoteDataSourceImpl
-import com.aetherized.smartfinance.features.finance.data.repository.FinanceRepositoryImpl
-import com.aetherized.smartfinance.features.finance.domain.model.Category
-import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
-import com.aetherized.smartfinance.features.finance.domain.repository.FinanceRepository
+import com.aetherized.smartfinance.core.data.repository.FinanceRepositoryImpl
+import com.aetherized.smartfinance.core.model.data.Category
+import com.aetherized.smartfinance.core.model.data.CategoryType
+import com.aetherized.smartfinance.core.data.repository.FinanceRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After

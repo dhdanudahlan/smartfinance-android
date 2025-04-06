@@ -1,10 +1,10 @@
 package com.aetherized.smartfinance.core.usecase
 
-import com.aetherized.smartfinance.features.finance.domain.model.Category
-import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
-import com.aetherized.smartfinance.features.finance.domain.model.Transaction
-import com.aetherized.smartfinance.features.finance.domain.repository.FinanceRepository
-import com.aetherized.smartfinance.features.finance.domain.usecase.GetCategoriesUseCase
+import com.aetherized.smartfinance.core.model.data.Category
+import com.aetherized.smartfinance.core.model.data.CategoryType
+import com.aetherized.smartfinance.core.model.data.Transaction
+import com.aetherized.smartfinance.core.data.repository.FinanceRepository
+import com.aetherized.smartfinance.core.domain.usecase.GetCategoriesUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf

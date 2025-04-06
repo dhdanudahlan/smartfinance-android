@@ -3,9 +3,9 @@ package com.aetherized.smartfinance.core.database.dao
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
-import com.aetherized.smartfinance.core.database.entity.CategoryEntity
+import com.aetherized.smartfinance.core.database.model.CategoryEntity
 import com.aetherized.smartfinance.core.utils.SyncStatus
-import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
+import com.aetherized.smartfinance.core.model.data.CategoryType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After

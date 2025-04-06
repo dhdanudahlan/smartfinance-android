@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
+import com.aetherized.smartfinance.core.database.model.TransactionEntity
 import com.aetherized.smartfinance.core.utils.SyncStatus
 import kotlinx.coroutines.flow.Flow
 

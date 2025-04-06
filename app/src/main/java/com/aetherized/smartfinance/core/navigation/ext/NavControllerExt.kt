@@ -2,7 +2,7 @@ package com.aetherized.smartfinance.core.navigation.ext
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.aetherized.smartfinance.ui.Screen
+import com.aetherized.smartfinance.features.main.ui.Screen
 
 fun NavController.navigateTo(
     screen: Screen

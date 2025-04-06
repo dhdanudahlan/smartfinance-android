@@ -6,8 +6,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.aetherized.smartfinance.core.database.SmartFinanceDatabase
 import com.aetherized.smartfinance.core.database.dao.CategoryDao
 import com.aetherized.smartfinance.core.database.dao.TransactionDao
-import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.features.finance.domain.model.CategoryType
+import com.aetherized.smartfinance.core.database.model.CategoryEntity
+import com.aetherized.smartfinance.core.model.data.CategoryType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

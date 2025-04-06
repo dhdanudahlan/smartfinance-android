@@ -1,13 +1,13 @@
 package com.aetherized.smartfinance.core.utils
 
-import com.aetherized.smartfinance.core.database.entity.AssetEntity
-import com.aetherized.smartfinance.core.database.entity.CategoryEntity
-import com.aetherized.smartfinance.core.database.entity.TransactionEntity
-import com.aetherized.smartfinance.features.asset.domain.model.Asset
-import com.aetherized.smartfinance.features.finance.data.dto.CategoryDto
-import com.aetherized.smartfinance.features.finance.data.dto.TransactionDto
-import com.aetherized.smartfinance.features.finance.domain.model.Category
-import com.aetherized.smartfinance.features.finance.domain.model.Transaction
+import com.aetherized.smartfinance.core.database.model.AssetEntity
+import com.aetherized.smartfinance.core.database.model.CategoryEntity
+import com.aetherized.smartfinance.core.database.model.TransactionEntity
+import com.aetherized.smartfinance.core.model.data.Asset
+import com.aetherized.smartfinance.core.model.data.Category
+import com.aetherized.smartfinance.core.model.data.Transaction
+import com.aetherized.smartfinance.core.network.model.CategoryDto
+import com.aetherized.smartfinance.core.network.model.TransactionDto
 import java.text.NumberFormat
 import java.time.Instant
 import java.time.LocalDateTime

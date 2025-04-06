@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.aetherized.smartfinance.core.navigation.ext.navigateTo
 import com.aetherized.smartfinance.core.navigation.screen.homeScreenNav
-import com.aetherized.smartfinance.ui.navigationRouteHome
+import com.aetherized.smartfinance.features.main.ui.navigationRouteHome
 
 @Composable
 fun RootNavGraph(

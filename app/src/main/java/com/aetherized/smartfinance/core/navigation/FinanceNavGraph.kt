@@ -6,7 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.aetherized.smartfinance.features.finance.presentation.screen.TransactionFormScreenContainer
+import com.aetherized.smartfinance.features.transactions.screen.TransactionFormScreenContainer
 
 @Composable
 fun FinanceNavGraph(navController: NavHostController) {
