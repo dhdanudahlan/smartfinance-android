@@ -1,14 +1,6 @@
 *.iml
 .gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-/.idea/androidTestResultsUserPreferences.xml
-/.idea/deploymentTargetSelector.xml
 .kotlin/errors/
 .DS_Store
 /build
@@ -25,3 +17,17 @@ local.properties
 *.swp
 *~
 *.backup
+# Android Studio project files
+.idea/*
+/.idea/assetWizardSettings.xml
+/.idea/androidTestResultsUserPreferences.xml
+/.idea/compiler.xml
+/.idea/runConfigurations.xml
+/.idea/vcs.xml
+/.idea/caches
+/.idea/modules
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/deploymentTargetSelector.xml
